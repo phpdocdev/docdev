@@ -1,0 +1,21 @@
+!.gitkeep
+.DS_Store
+.idea
+npm-debug.log
+.env
+
+# Custom Container
+opt/custom/*
+
+# MySQL
+mysql/data/*
+
+# PHP
+custom_crontab
+
+# Apache
+apache/sites/*
+!apache/sites/localhost
+!apache/sites/pub.localhost
+!apache/sites/localhost.conf
+php/conf/custom.ini

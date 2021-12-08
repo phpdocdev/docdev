@@ -1,0 +1,53 @@
+version: '3'
+networks:
+  # Default Network ------------------------------------------
+  lde-network:
+    ipam:
+      config:
+        - subnet: 192.168.103.0/24
+
+services:
+  # Apache ---------------------------------------------------
+  apache:
+    container_name: apache
+    hostname: apache
+    restart: ${DOCKER_RESTART}
+    build:
+      context: ./apache
+      dockerfile: ./Dockerfile
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./apache/sites:/usr/local/apache2/conf/sites:ro
+      - ${DOCUMENTROOT}:/var/www/html:delegated
+      - ./cert:/etc/ssl/certs
+    env_file:
+      - .env
+    networks:
+      lde-network:
+        ipv4_address: 192.168.103.100
+
+  # PHP 8.0 ---------------------------------------------------
+  php-fpm:
+    container_name: php${PHPV}
+    hostname: php${PHPV}
+    build:
+      context: ./php
+      dockerfile: ./${PHPV}/Dockerfile
+      args:
+        - CUSTOM_USER_NAME=${CUSTOM_USER_NAME}
+        - CUSTOM_UID=${CUSTOM_UID}
+        - CUSTOM_GID=${CUSTOM_GID}
+    ports:
+      - "3000:3000" # Browser Sync
+      - "3001:3001" # Browser Sync UI
+    extra_hosts:
+      - "mysql:192.168.65.2"
+      - "redis:192.168.65.2"
+    restart: ${DOCKER_RESTART}
+    volumes:
+      - ${DOCUMENTROOT}:/var/www/html:delegated
+    networks:
+      lde-network:
+    user: ${CUSTOM_UID}:${CUSTOM_GID}
