@@ -3,6 +3,7 @@
 .idea
 npm-debug.log
 .env
+cert/*
 
 # Custom Container
 opt/custom/*
@@ -19,3 +20,4 @@ apache/sites/*
 !apache/sites/pub.localhost
 !apache/sites/localhost.conf
 php/conf/custom.ini
+cert

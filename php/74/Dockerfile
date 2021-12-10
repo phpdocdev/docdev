@@ -48,5 +48,12 @@ RUN chown ${CUSTOM_USER_NAME}:${CUSTOM_USER_NAME} /etc/supervisor/supervisord.pi
 COPY ./74/Dockerfile ./74/custom_crontab* /root/
 RUN /usr/bin/crontab -u ${CUSTOM_USER_NAME} /root/custom_crontab
 
+
+ADD https://github.com/mlocati/docker-php-extension-installer/releases/latest/download/install-php-extensions /usr/local/bin/
+
+RUN chmod +x /usr/local/bin/install-php-extensions && sync && \
+    install-php-extensions ldap pgsql pdo_pgsql
+
+
 ENTRYPOINT []
 CMD ["/usr/bin/supervisord"]
