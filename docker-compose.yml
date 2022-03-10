@@ -52,15 +52,12 @@ services:
       - "3000:3000" # Browser Sync
       - "3001:3001" # Browser Sync UI
     extra_hosts:
-      - "mysql:192.168.65.2"
-      - "redis:192.168.65.2"
+      - "mysql:${DOCKER_HOST_IP}"
+      - "redis:${DOCKER_HOST_IP}"
     restart: ${DOCKER_RESTART}
     volumes:
       - ${DOCUMENTROOT}:/var/www/html:delegated
       - ./cert:/etc/ssl/cert
-      # - type: bind
-        # source: ./cert
-        # target: /etc/ssl/certs
     environment:
       - ENVIRONMENT_NAME=local
     networks:
@@ -76,7 +73,6 @@ services:
       dockerfile: ./Dockerfile
     restart: always
     ports:
-      # [local-machine:]local-port:docker-port
       - "${LOCAL_LISTEN_ADDR}${HOST_PORT_BIND:-53}:53/tcp"
       - "${LOCAL_LISTEN_ADDR}${HOST_PORT_BIND:-53}:53/udp"
 
