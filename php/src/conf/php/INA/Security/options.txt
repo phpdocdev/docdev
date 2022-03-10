@@ -1,0 +1,19 @@
+deploy.lib.method = copy
+deploy.lib.config.copyto = /lib/options.txt
+deploy.lib.src.basedir = lib
+deploy.lib.targetdir = /web/php/INA/Security
+
+deploy.web.method = copy
+deploy.web.src.basedir = web
+deploy.web.targetdir = /web/app-bin/app.dev.ark.org/security
+
+deploy.static.method = copy
+deploy.static.src.basedir = static
+deploy.static.targetdir = /web/shtml/security
+
+INA_SECURITY_DSN=mysqli://arportal:arportal@db.dev.ark.org/php_sessions
+INA_SECURITY_BASE_URL=https://dev.ark.org/security/
+INA_SECURITY_BASE_STATIC_URL=https://dev.ark.org/security/
+INA_SECURITY_SSO_URL=https://dev.ark.org/ssoportal/index.php
+
+INA_MANTIS_DSN=mysqli://arportal:arportal@db.dev.ark.org/mantis

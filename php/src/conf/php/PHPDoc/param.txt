@@ -1,0 +1,800 @@
+    * @author     Ulf Wendel <ulf.wendel@phpdoc.de>
+    * @version    $Id: param.txt,v 1.1.1.1 2001/05/08 21:50:01 david Exp $
+    * @var    array    $inherited
+    * @return   array   $class
+    * @access   public
+    * @return   array    
+    * @access   public
+    * @see      getInheritedVariables(), getInheritedUses(), getInheritedConstants()
+    * @return   array
+    * @access   public
+    * @see      getInheritedFunctions(), getInheritedUses(), getInheritedConstants()
+    * @return   array
+    * @access   public
+    * @see      getInheritedFunctions(), getInheritedUses(), getInheritedConstants()
+    * @return    array
+    * @access    public
+    * @see       getInheritedFunctions(), getInheritedVariables(), getInheritedUses()
+    * @return   array   $path
+    * @access   public
+    * @see      getSubclasses()
+    * @return   array
+    * @access   public
+    * @see      getClasstree()
+    * @param    array   $xmlpath
+    * @return   array   $path
+    * @see    $inherited
+    * @version  $Id: param.txt,v 1.1.1.1 2001/05/08 21:50:01 david Exp $
+    * @var  object  PhpdocXMLReader $xmlreader
+    * @var    array    $xml
+    * @var  boolean
+    * @var  array
+    * @param    string  Name of the xml file
+    * @return   boolean False if the given xml file was not 
+    * @access   public
+    * @see      init()
+    * @abstract
+    * @see    $xml, $data
+    * @version  $Id: param.txt,v 1.1.1.1 2001/05/08 21:50:01 david Exp $
+    * @var  string    
+    * @return   array   $functions
+    * @access   public
+    * @see      getFunctionsByAccess()
+    * @param    string  Requested access attribute.
+    * @return   array   $functions
+    * @access   public
+    * @see      getFunctions()
+    * @return   array   $variables
+    * @access   public
+    * @see      getVariablesByAccess()
+    * @param    string   Requested access attribute.
+    * @return   array    $variables
+    * @access   public
+    * @see      getVariables()
+    * @return   array   $constants
+    * @access   public
+    * @see      getConstantsByAccess()
+    * @param    string  Requested access attribute.
+    * @return   array   $constants
+    * @see      getConstants()
+    * @access   public
+    * @return   array    $uses
+    * @see      getUsesByType()
+    * @access   public
+    * @param    string  Requested type: include, include_once, require, require_once
+    * @return   array   $uses
+    * @access   public
+    * @param    string  Name of the element you need: functions, variables,...
+    * @param    string  Name of internal element access table
+    * @see      $data
+    * @param    string  Accesstype
+    * @param    string  element name
+    * @param    string  access type
+    * @brother  getElements()
+    * @param    string  name of the element to add: function, variable, constant.
+    * @var  array
+    * @var  array
+    * @var  array
+    * @var    array
+    * @var  array
+    * @var  array
+    * @see  buildPackagelist()
+    * @var  array
+    * @access   public
+    * @return   array
+    * @access   public
+    * @return   array
+    * @access   public
+    * @see      getChapters()
+    * @return   array
+    * @access   public
+    * @see      getChapternames()
+    * @return   array
+    * @access   public
+    * @see  getModulegroup()
+    * @see  getClasstree()
+    * @see    $flagBuild
+    * @version  $Id: param.txt,v 1.1.1.1 2001/05/08 21:50:01 david Exp $
+    * @return   array   $class
+    * @access   public
+    * @version  $Id: param.txt,v 1.1.1.1 2001/05/08 21:50:01 david Exp $
+    * @var      boolean
+    * @access   public
+    * @var      array
+    * @var      boolean
+    * @param    string  XML file
+    * @return   array
+    * @access   public
+    * @see      $freeOnGet
+    * @param    string  XML file to load
+    * @version    $Id: param.txt,v 1.1.1.1 2001/05/08 21:50:01 david Exp $
+    * @var  array
+    * @var  string    
+    * @var  array
+    * @var  array
+    * @var  array
+    * @see  findUndocumented()
+    * @param    array   Raw class data from the parser
+    * @param    string  Name of the baseclass of the given classes
+    * @access   public
+    * @return   mixed   False if there no classes anymore, otherwise an array with 
+    * @accesss  public
+    * @param    string  Classname
+    * @param    string  Classname
+    * @param    string      Name of the class that starts the recursive build process. 
+    * @see      $classlist
+    * @param    string  Classname
+    * @return   boolean $ok
+    * @see      $classes, $notinherited, addInheritedElements()
+    * @param    string  Name of the class that inherits the informations.
+    * @param    string  Name of the parentclass
+    * @param    string  Type of elements inherited: "functions", "variables", "uses", "consts"
+    * @return   boolean $ok
+    * @see      $classes, $notinherited, isUndocumented()
+    * @param    string  Name of the class of the element
+    * @param    string  Element type: functions, variables, uses, consts.
+    * @param    string  Element name
+    * @return   boolean $ok
+    * @param    string  Name of the class to update
+    * @param    string  Elementtype: functions, variables, ...
+    * @return   boolean
+    * @param    string  Classname
+    * @param    string  Element type: functions (, variables, consts, uses)
+    * @return   boolean $ok
+    * @see      updateAccessReturn()
+    * @param    string  Classname
+    * @param    string  Element type: functions, variables, consts (, uses)
+    * @see      updateAccessReturnElements()
+    * @param    array   List of functions, variables,...
+    * @param    string  Name of the class that contains the given elements.
+    * @param    string  Elementtype: functions, variables, consts, uses.
+    * @param    string  Name of the class to scan.
+    * @version $Id: param.txt,v 1.1.1.1 2001/05/08 21:50:01 david Exp $
+    * @var  boolean
+    * @var  array   Format: elementlist[ eltype ][ elname ] = true
+    * @see  buildElementlist()
+    * @param    integer     $nr     number to format
+    * @return   string
+    * @author   Thomas Weinert <subjective@subjective.de>
+    * @access   public
+    * @abstract
+    * @abstract
+    * @see      updateBrotherSisterElements()
+    * @return   boolean $ok
+    * @param    array   Data of the target element that has a brother/sister tag
+    * @param    array   Data of the element that is referenced by brother/sister
+    * @see      updateAccessReturnElements(), updateAccessElements()
+    * @abstract
+    * @return   boolean    $ok
+    * @see      updateAccessReturn()
+    * @abstract
+    * @see      updateAccessReturnElements()
+    * @abstract
+    * @abstract
+    * @abstract
+    * @abstract
+    * @abstract
+    * @abstract
+    * @see            $elementlist
+    * @param    array   Function arguments found by the parser
+    * @param    array   Paramarray
+    * @param    string  Functionname
+    * @param    string  Filename
+    * @param    boolean Param tags inherited?
+    * @return   array   $params    Param array
+    * @version $Id: param.txt,v 1.1.1.1 2001/05/08 21:50:01 david Exp $
+    * @var  array
+    * @var  array
+    * @var    array
+    * @see    findUndocumented()
+    * @param    array    Raw modulegroup data from the parser.
+    * @access    public
+    * @return   mixed   False if there no more modules in the modulegroup otherwise
+    * @access   public
+    * @see  $modulelist, $modulegroup
+    * @param    string  Modulegroupname
+    * @param    string  Modulename
+    * @param    string  Elementtype: functions, variables.
+    * @return   boolean    
+    * @param    string  Modulegroup
+    * @param    string  Modulename
+    * @param    string  Elementtype: functions, variables, consts.
+    * @return   boolean
+    * @param    string  Modulegroup
+    * @param    string  Modulename
+    * @param    string  Elementtype: functions, variables, consts.
+    * @return   boolean
+    * @param    array   List of functions, variables,...
+    * @param    string  Name of the modulegroup that contains the given elements.
+    * @param    string  Name of the module that contains the given elements.
+    * @param    string  Elementtype: functions, variables, consts, uses.
+    * @param    string  Name of the modulegroup that contains the module.
+    * @param    string  Name of the module to scan.
+    * @access   public
+    * @version  $Id: param.txt,v 1.1.1.1 2001/05/08 21:50:01 david Exp $
+    * @var  array
+    * @see  render()
+    * @global array $argc, string $PHP_SELF
+    * @return   bool        $ok
+    * @throws   PhpdocError
+    * @access   public
+    * @param    string  Targetformat, currently only "html" is available.
+    * @param    string  Target directory for the html files
+    * @param    string  Directory with the html templates
+    * @return   bool    $ok
+    * @throws   PhpdocError
+    * @access   public
+    * @author   Ulf Wendel <ulf@redsys.de>
+    * @version  $Id: param.txt,v 1.1.1.1 2001/05/08 21:50:01 david Exp $
+    * @var        array
+    * @access    private
+    * @access    private
+    * @return    string    $help_msg    Some instructions on available command line options
+    * @see        handleArgv(), $COMMANDS
+    * @author   Ulf Wendel <ulf.wendel@phpdoc.de>
+    * @version  $Id: param.txt,v 1.1.1.1 2001/05/08 21:50:01 david Exp $
+    * @package  PHPDoc
+    * @var      array
+    * @access   public
+    * @var  string    
+    * @var  array
+    * @var  boolean $flag_output
+    * @see  setFlagOutput()
+    * @since  0.3
+    * @param    boolean $flagOutput
+    * @access   public
+    * @see      $flag_output, out(), outl()
+    * @since    0.3    
+    * @param    string     $message
+    * @param    string  element name
+    * @return   string  url name
+    * @param    string  $message
+    * @param    string  $title          Optional title used in the HTML Table
+    * @param    mixed   $data           Optional array or object that you want to dump. 
+    * @param    boolean $userfunction   Optional flag. If set to false userfunction
+    * @access   public
+    * @version  0.2
+    * @version  $Id: param.txt,v 1.1.1.1 2001/05/08 21:50:01 david Exp $
+    * @author   Ulf Wendel <ulf@redsys.de>
+    * @var      string  $target
+    * @access   private
+    * @var  string  $application
+    * @see  setApplication()
+    * @var  string
+    * @see  setApplication()
+    * @var  string  targetFileSuffix
+    * @see  setTargetFileSuffix()
+    * @var  array    sourceFileSuffix
+    * @see  setSourceFileSuffix()
+    * @var   string    
+    * @see   setSourceDirectory()
+    * @param    string
+    * @access   public
+    * @param    string
+    * @access   public
+    * @param    string      $application    name of the application
+    * @return   bool        $ok
+    * @throws   PhpdocError    
+    * @access   public
+    * @param    string  $suffix string with the suffix
+    * @return   boolean $ok
+    * @see      $targetFileSuffix
+    * @author   Thomas Weinert <subjective@subjective.de>
+    * @param    mixed   $suffix        string with one suffix or array of suffixes
+    * @return   boolean $ok
+    * @throws   PhpdocError
+    * @see      $sourceFileSuffix
+    * @param    string  $target
+    * @return   boolean $ok 
+    * @throws   PhpdocError
+    * @access   public
+    * @param    mixed   $errors
+    * @return   array   $errors
+    * @param    string    Directoryname
+    * @return    string    Directoryname
+    * @author   Ulf Wendel <ulf.wendel@phpdoc.de>
+    * @version  $Id: param.txt,v 1.1.1.1 2001/05/08 21:50:01 david Exp $
+    * @package  PHPDoc
+    * @var  string  $classname
+    * @var  string  $error_message_prefix
+    * @var  string  $error_prepend
+    * @var  string  $error_append
+    * @var  string  $message
+    * @see  PhpdocError()
+    * @var  string  $file
+    * @see  PhpdocError()
+    * @var  integer $line
+    * @see  PhpdocError()
+    * @var    array    $errorHandling
+    * @see    PhpdocError()
+    * @param    string  Errormessage
+    * @param    string  Name of the file where the error occured, use __FILE__ for this
+    * @param    string  Linenumber where the error occured, use __LINE__ for this
+    * @access    public
+    * @brother    getMessage()
+    * @version  $Id: param.txt,v 1.1.1.1 2001/05/08 21:50:01 david Exp $
+    * @author   Ulf Wendel <ulf@redsys.de>
+    * @var  string  $path
+    * @see  setFilePath()
+    * @param    mixed       Filename or an array filenames, $k => $filename
+    * @throws   PhpdocError
+    * @access   public
+    * @param    string  $path
+    * @return   bool    $ok
+    * @access   public
+    * @param    string  $filename
+    * @return   string  $content
+    * @throws   PhpdocError
+    * @param    string  Filename
+    * @param    string  Content to append
+    * @param    string  Directory prefix
+    * @throw    PHPDocError
+    * @return    boolean
+    * @param    string
+    * @param    string
+    * @param    string
+    * @throws   PHPDocError
+    * @return   boolean
+    * @param    string  $directory
+    * @param    mixed   $suffix         Suffix of the files returned 
+    * @param    boolean $flag_subdir    include subdirectories? 
+    * @param    array   $files          New entries are added to this variable if provided.
+    * @return   array   $files
+    * @throws   PhpdocError
+    * @author   Ulf Wendel  <ulf.wendel@redsys.de>
+    * @version  $Id: param.txt,v 1.1.1.1 2001/05/08 21:50:01 david Exp $
+    * @var  array
+    * @var  array
+    * @var  array
+    * @var  array
+    * @var  array
+    * @param    array    
+    * @access   public
+    * @see      addModule()
+    * @param    array
+    * @access   public
+    * @see      addClass()
+    * @access   public
+    * @return   array   $classtree
+    * @access   public
+    * @return   array   $modulegroup
+    * @access   public
+    * @return   array   $packages
+    * @access   public
+    * @return   array
+    * @param    array    
+    * @param    string    Element type: class, module.
+    * @version $Id: param.txt,v 1.1.1.1 2001/05/08 21:50:01 david Exp $
+    * @var  array
+    * @var  array
+    * @param    array
+    * @param    array    Hash with the data of the current constant paragraph
+    * @return    array $constant
+    * @version    $Id: param.txt,v 1.1.1.1 2001/05/08 21:50:01 david Exp $
+    * @var    array $classes
+    * @see    $emptyClass
+    * @var    array    $emptyClass
+    * @var    array    $classTags
+    * @see    analyseClassParagraph()
+    * @param    array
+    * @return    array
+    * @param    array    Hash returned by getPhpdocParagraph()
+    * @return    array
+    * @version $Id: param.txt,v 1.1.1.1 2001/05/08 21:50:01 david Exp $
+    * @var    array    $emptyFunction
+    * @var    array    $functionTags
+    * @see    analyseFunctionParagraph()
+    * @param    array
+    * @return array
+    * @param    string  PHP code to examine.
+    * @return   array   Array of arguments: $args[] = array( optional, default, type, name ).
+    * @see      getVariableTypeAndValue()
+    * @author    Ulf Wendel <ulf.wendel@redsys.de>
+    * @version 0.1alpha
+    * @var    array
+    * @var    array    tagname => true
+    * @var    array
+    * @param    array   Array of parsing data
+    * @return   array
+    * @see      analyseModuleDoc()
+    * @param    array   Module paragraph
+    * @return   array
+    * @version    $Id: param.txt,v 1.1.1.1 2001/05/08 21:50:01 david Exp $
+    * @var    string    Name of the file currently parsed.
+    * @var    array
+    * @see    parse()
+    * @var    array
+    * @var    array
+    * @see    $modules
+    * @var    array
+    * @var array
+    * @var array
+    * @var    array
+    * @var array
+    * @var    array
+    * @see    $classes
+    * @var    array
+    * @var    boolean    
+    * @see    getClassTree()
+    * @var    boolean
+    * @see    getModulegroup()
+    * @var    string
+    * @see    getClassTree()
+    * @param    boolean  If true the parser prints status messages.
+    * @see      $warn, buildComplexRegExps()
+    * @return   boolean    $ok
+    * @access   public
+    * @see      findModulegroups(), findClassTrees(), getModulesAndClasses()
+    * @return   mixed   $classes    Hash with the data of the current class tree or false.
+    * @access   public
+    * @see      getModulegroup(), $baseclasses
+    * @return   mixed        $modulegroup    Hash with the data of the current class tree or false.
+    * @access   public
+    * @see      getClassTree(), addModule(), $modulegroups
+    * @param    string    Name of the module group the parsing result gets added.
+    * @param    string    Name of the file to scan.
+    * @see    getPhpdocParagraphs(), analyseModule()
+    * @param    string    Name of the class that gets added.
+    * @param    string    Name of the file to scan.
+    * @see      addSubclasses(), analyseClass(), $classes
+    * @param    string Name of the class that might contain subclasses
+    * @see    addClass()
+    * @param    array    Hash with the result of getClassesAndModules() of all files
+    * @see    parse(), findClassTree(), $modulegroups, $modulefiles
+    * @param    array    Hash with the result of getClassesAndModules() of all files
+    * @see      parse(), findModulegroups(), $classnamesToFilenames, $classtree, $classfiles, $baseclasses
+    * @return array    
+    * @see        $classnamesToFilenames
+    * @param    array        $phpfiles
+    * @return    bool        $ok
+    * @access    public
+    * @version  $Id: param.txt,v 1.1.1.1 2001/05/08 21:50:01 david Exp $
+    * @param    string  PHP code to scan.
+    * @param    mixed   String of one keyword or array of keywords not to scan for. Known keywords are:
+    * @return   array   Hash of phpdoc elements found, indexed by "variables", "functions", "classes", "consts", "uses".
+    * @see      $PHP_BASE, $PHP_COMPLEX, $C_BASE, $C_COMPLEX, extractPhpdoc(), getModuleDoc()
+    * @param    string  Code to scan
+    * @return   array   Hash of modules and classes found in the given code
+    * @access   public
+    * @see      getPhpdocParagraphs()
+    * @param    string  PHP Code to scan
+    * @return   array   $module structure: $module[0] = array with module data, 
+    * @param    string              PHP code to scan.
+    * @return   array   $classes    Array of classes found in the code. $classes[classname] = extends
+    * @param    string  Doc comment to clean up.
+    * @return   string  $phpdoc
+    * @param    string                  Doc comment to examine.
+    * @return   array   $description    $description[0] = short description (first line),
+    * @param    string    The php code to examine.
+    * @param    mixed        String of one delimiter or array of delimiters.
+    * @return    string    Value found in the code
+    * @todo        Racecondition: comments
+    * @param    string              PHP code to analyse
+    * @param    boolean             Flag indicating the "type" of code to analyse. Optional 
+    * @return array     $vartype    $vartype[0] = type, $vartype[1] = value, $vartype[2] = raw value
+    * @version  $Id: param.txt,v 1.1.1.1 2001/05/08 21:50:01 david Exp $
+    * @var  array   List of all PHPDoc documentation tags.
+    * @var  array   List of basic regular expressions matching parts of doc comments: 
+    * @final
+    * @see    buildComplexRegExps(), $C_COMPLEX
+    * @var    array Regular expressions matching see and optional objectnames.
+    * @final
+    * @see    buildComplexRegexps(), $C_BASE
+    * @var      array   List of basis regular expressions matching php code elements:
+    * @final
+    * @see     $PHP_COMPLEX
+    * @var  array   RegExps to match: variablenames, functionnames, classnames,
+    * @see    buildComplexRegExps(), getVariableTypeAndValue(), getPhpdocParagraphs(), $PHP_BASE
+    * @var  array   Used to analyse return, var, param, 
+    * @see  PhpdocParserObject()
+    * @see    $PHP_BASE, $PHP_COMPLEX, $C_BASE, $C_COMPLEX
+    * @version $Id: param.txt,v 1.1.1.1 2001/05/08 21:50:01 david Exp $
+    * @param    array    $tags      array of tags returned by getTags
+    * @param    array    $data      array where the allowed tags and their values are copied to
+    * @param    array    $allowed   array of allowed (recognized) tags
+    * @return   array    $data
+    * @throws   PhpdocError
+    * @see      getTags(), analyseVariableParagraphs(), analyseFunctionParagraphs(), analyseClassParagraphs(), analyseSeeTags()
+    * @param    array           Array return by preg_match()
+    * @return   array   $see    $see[0] = error, $see[1] = data
+    * @see      analyseTags()
+    * @param    string  Doc comment.
+    * @return   array   List of tags ordered by their appearance containing the 
+    * @see      getTagPos()
+    * @param    string  $phpdoc    
+    * @param    integer $offset
+    * @return   array   $tag    0 => tag, 1 => offset
+    * @see      findTags()
+    * @param    array   $data
+    * @param    string  $mode    Keyword where the data hash comes from eg. function/class...
+    * @return   array   array( $error_msg, $data )
+    * @author   Ulf Wendel <ulf.wendel@redsys.de>
+    * @version  $Id: param.txt,v 1.1.1.1 2001/05/08 21:50:01 david Exp $
+    * @var  array
+    * @var  array
+    * @param    array
+    * @version  $Id: param.txt,v 1.1.1.1 2001/05/08 21:50:01 david Exp $
+    * @var    array        $emptyVariable
+    * @var    array    $variableTags
+    * @see    analyseVariableParagraph()
+    * @param    array    Hash returned by getPhpdocParagraph()
+    * @return   array 
+    * @param    array   $variable
+    * @return   array   $variable
+    * @version  $Id: param.txt,v 1.1.1.1 2001/05/08 21:50:01 david Exp $
+    * @var  array
+    * @var  array
+    * @param    string  XML file path
+    * @param    string  Template file path
+    * @param    string  Name of the current application
+    * @param    string  Filename extension
+    * @see      setPath(), setTemplateRoot()
+    * @param    string  XML source file
+    * @param    string  Name of the HTML target file.
+    * @access   public
+    * @see  renderInheritedElements()
+    * @param    array   List of inherited elements.
+    * @param    string  Templateblockname
+    * @param    string  Element type: function, variable...
+    * @see      renderInherited()
+    * @see  renderVariableSummary(), renderVariableDetail()
+    * @see  renderVariableDetail()
+    * @see  renderVariableSummary()
+    * @param    string  name of the current class
+    * @return   string  HTML that shows the tree
+    * @param    int     number of "&nbsp;" required.
+    * @see      $indent
+    * @return   tring   A string with the requested number of nunbreakable html spaces
+    * @version $Id: param.txt,v 1.1.1.1 2001/05/08 21:50:01 david Exp $
+    * @var      string  $undocumented
+    * @access   public
+    * @var  array   $functions
+    * @var  array   $uses
+    * @var  array   $constants
+    * @var  array   $accessModifiers
+    * @var  array    $simpleDocfields
+    * @see  renderVariableDetail()
+    * @var  array       $usesTypes
+    * @see  renderUses()
+    * @see  renderConstantSummary(), renderConstantDetail()
+    * @see  renderConstantDetail()
+    * @see  renderConstantSummary()
+    * @see  renderUsesSummary(), renderUsesDetail()
+    * @see  renderUsesSummary()
+    * @see  renderUsesDetail()
+    * @see  renderFunctionSummary(), renderFunctionDetail(), $functions
+    * @see  renderFunctionDetail(), renderFunctions(), $functions, $accessModifiers
+    * @see  renderFunctions(), renderFunctionSummary(), $functions, $accessModifiers
+    * @param    array   Parameter
+    * @param    array   XML parameter array
+    * @return   string  Formatted parameter string
+    * @param    array   XML references array
+    * @param    string  optional template blockname prefix
+    * @param    array   XML author array
+    * @param    string  optional template blockname prefix
+    * @param    array   XML link array
+    * @param    string  optional template blockname prefix
+    * @param    array   XML array 
+    * @param    string  optional template blockname prefix
+    * @param    array   XML globals array
+    * @param    string  optional template blockname prefix
+    * @param    string  template blockname prefixs
+    * @param    array        
+    * @see    $simpleDocfields, renderLinks(), renderAuthors(), renderSee()
+    * @version  $Id: param.txt,v 1.1.1.1 2001/05/08 21:50:01 david Exp $
+    * @var  array
+    * @see  renderPackagelist()
+    * @var  array
+    * @var  array
+    * @var  object  IntegratedTemplate
+    * @see  renderClasstree()
+    * @var  object    IntegratedTemplate
+    * @see  renderModulegroup()
+    * @param    string  XML file path
+    * @param    string  Template file path
+    * @param    string  Name of the application
+    * @param    string  Filename extension
+    * @see      setPath(), setTemplateRoot()
+    * @access    public
+    * @see    renderElementlist(), renderPackagelist(), renderFramelementlist(), renderFramePackageSummary()
+    * @see      renderClasstree()
+    * @access   public
+    * @param    string  XML Classtree file
+    * @see      finishClasstree()
+    * @access   public
+    * @param    string  XML File
+    * @param    string  XML file
+    * @access   public
+    * @see      generate()
+    * @param    string  XML file
+    * @access   public
+    * @see      renderFrameElementlist(), renderFramePackagesummary()
+    * @param    string  This function needs the packagelist.xml to work!
+    * @access   public
+    * @see      renderFramePackagesummary(), renderPackagelist()
+    * @param    string  XML file.
+    * @access   public
+    * @see      renderPackagelist(), renderFrameElementlist()
+    * @param    string      XML file.
+    * @see      $packages
+    * @param    string  Name of the class the recursive loop starts with
+    * @see      renderClasstree()
+    * @version    $Id: param.txt,v 1.1.1.1 2001/05/08 21:50:01 david Exp $
+    * @param    string  XML file path
+    * @param    string  Template file path
+    * @param    string  Name of the current application
+    * @param    string  Filename extension
+    * @see      setPath(), setTemplateRoot()
+    * @param    string  XML source file
+    * @param    string  Name of the HTML target file.
+    * @access   public
+    * @version $Id: param.txt,v 1.1.1.1 2001/05/08 21:50:01 david Exp $
+    * @var  object  IntegratedTemplate
+    * @var  object  PhpdocAccessor
+    * @var  string  $templateRoot
+    * @see  setTemplateRoot()
+    * @var  string  $path
+    * @param    string    
+    * @param    string
+    * @param    string  String to encode
+    * @return   string  $string    Encoded string
+    * @version  $Id: param.txt,v 1.1.1.1 2001/05/08 21:50:01 david Exp $
+    * @var  object PhpdocHTMLIndexRenderer
+    * @var  object PhpdocHTMLClassRenderer
+    * @var  object PhpdocHTMLModuleRenderer
+    * @var  object PhpdocHTMLWarningRenderer
+    * @param    string  Name of the target directory
+    * @param    string  Name of the directory with the templates.
+    * @param    string  Name of the current application
+    * @param    string  Extension of generated files
+    * @param    string  XML file.
+    * @param    string  Content of the XML file: class, classtree, 
+    * @access    public
+    * @access   public
+    * @version  $Id: param.txt,v 1.1.1.1 2001/05/08 21:50:01 david Exp $
+    * @param    string  XML file path
+    * @param    string  Template file path
+    * @param    string  Name of the application
+    * @param    string  Filename    extension
+    * @see      setPath(), setTemplateRoot()
+    * @see      addWarnings()
+    * @access   public
+    * @param    string  XML file
+    * @see      finishWarnings()
+    * @access   public
+    * @version $Id: param.txt,v 1.1.1.1 2001/05/08 21:50:01 david Exp $
+    * @var  string  
+    * @version  $Id: param.txt,v 1.1.1.1 2001/05/08 21:50:01 david Exp $
+    * @var  array    
+    * @var  integer
+    * @see  getNumDocWarnings(), getNumWarnings()
+    * @param    string  Name of the file that containts the error
+    * @param    string  Kind of the element that caused the error: module, class, function, variable, use, const
+    * @param    string  Name of the class/function/... that caused the warning
+    * @param    string  Warning message itself
+    * @param    string  Type of the error: missing, mismatch, syntax, ...
+    * @access   public
+    * @see      addDocWarning()
+    * @return    array    $warnings
+    * @access    public
+    * @access    public
+    * @see    getNumParserWarnings(), getNumWarnings()
+    * @version $Id: param.txt,v 1.1.1.1 2001/05/08 21:50:01 david Exp $
+    * @var  array   $docTags
+    * @var  array
+    * @var  array
+    * @var  array
+    * @var  array
+    * @var  array
+    * @var  array
+    * @var  array
+    * @var  array
+    * @var  array
+    * @var  array
+    * @param    string  $file   Filename
+    * @param    array   Array of constants
+    * @return   boolean Returns false on failure otherwise true
+    * @param    array
+    * @param    array
+    * @param    sarray
+    * @param    array
+    * @param    array
+    * @param    array
+    * @param    array
+    * @param    array
+    * @param    array
+    * @param    array
+    * @version  $Id: param.txt,v 1.1.1.1 2001/05/08 21:50:01 david Exp $
+    * @var  array   $variableAttributes
+    * @var  array   $classAttributes
+    * @param    array   Array of inherited or overriden elements
+    * @param    string  Container used when saving the elements
+    * @param    array
+    * @param    string  Name of the baseclass
+    * @param    array    
+    * @param    array
+    * @version $Id: param.txt,v 1.1.1.1 2001/05/08 21:50:01 david Exp $
+    * @var  array
+    * @var  array()
+    * @param    array
+    * @access   public
+    * @param    array
+    * @access   public
+    * @param    array   Classtree
+    * @param    string  Name of the baseclass of the classtree
+    * @access   public
+    * @param    array
+    * @access   public
+    * @version  $Id: param.txt,v 1.1.1.1 2001/05/08 21:50:01 david Exp $
+    * @var  string  $fileprefix
+    * @var  string      $path
+    * @see  setPath()
+    * @var  array       $result
+    * @see  setResult(), export()
+    * @var  object  PhpdocXMLWriter
+    * @see  PhpdocXMLExporter()
+    * @see  $xmlwriter
+    * @param    string
+    * @see      $path
+    * @access   public
+    * @param    array    
+    * @param    string    name of the target xml file
+    * @access   public
+    * @see      create(), $result
+    * @param    array
+    * @param    array   data array
+    * @param    array   array of allowed fields and their attribute type 
+    * @return   array   $attribs
+    * @version  $Id: param.txt,v 1.1.1.1 2001/05/08 21:50:01 david Exp $
+    * @var  array   $moduleAttributes
+    * @var  array
+    * @version $Id: param.txt,v 1.1.1.1 2001/05/08 21:50:01 david Exp $
+    * @var  object PhpdocFileHandler
+    * @see  createFileHandler()
+    * @var  array
+    * @see  parse(), stripCloseFromStructvalues(), importXML()
+    * @param    string  $filename Name of the xml document
+    * @access   public
+    * @throws   PhpdocError
+    * @see      importXML()
+    * @see  $filehandler
+    * @see  $structvalues 
+    * @param    integer    
+    * @param    integer
+    * @return   array    $data[0] = daten, $data[1] = some index value used for the recursion
+    * @see      addToArray()
+    * @param    array
+    * @param    string
+    * @param    string    
+    * @param    array
+    * @param    array
+    * @return   array $target
+    * @param    string  String to decode
+    * @return   string  Decoded string
+    * @version    $Id: param.txt,v 1.1.1.1 2001/05/08 21:50:01 david Exp $
+    * @var  string  $xml
+    * @var  object  PhpdocWarning
+    * @var  object  PhpdocFilehandler
+    * @see  PhpdocXMLWriter()
+    * @see  $filehandler
+    * @access    public
+    * @param    string  xml to append
+    * @access   public
+    * @param    string  Name of the target file
+    * @access   public
+    * @param    string  elementname (tagname)
+    * @param    string  value of the container: <name>value
+    * @param    array   Array of attributes: $attribs[n][type] = boolean|cdata, $attribs[n][value] = value
+    * @param    boolean Flag indication that you want an empty tag like <name/>.
+    * @access   public
+    * @see      endElement()
+    * @param    string    Elementname (tagname)
+    * @access   public
+    * @see      startElement()
+    * @param    string  Elementname (tagname)
+    * @param    string  Value
+    * @param    array   Attributes
+    * @access   public
+    * @see      startElement(), endElement()
+    * @param    string  $value
+    * @return   string  $value

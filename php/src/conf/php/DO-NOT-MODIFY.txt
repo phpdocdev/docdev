@@ -1,0 +1,7 @@
+ ------ Do not modify this distribution ------ 
+Project:     ina-taxrates
+Version:     HEAD
+Subtarget:   lib
+Deployed to: dev
+Deployed by: neo
+Deploy Date: 10/26/2007 08:25 AM

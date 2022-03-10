@@ -1,0 +1,9 @@
+ ------ Do not modify this distribution ------ 
+Project:     ina-taxrates
+Branch:      trunk
+Revision:    30
+Subtarget:   lib
+Deployed to: dev
+Deployed by: neo
+SVN user:    ora
+Deploy Date: 12/01/2009 02:29 PM

@@ -1,0 +1,42 @@
+<?php
+/****************************************************************
+* Script         : MySQL test examples for PhpSimpleXlsGen
+* Project        : PHP SimpleXlsGen
+* Author         : Erol Ozcan <eozcan@superonline.com>
+* Version        : 0.1
+* Copyright      : GNU LGPL
+* URL            : http://psxlsgen.sourceforge.net
+* Last modified  : 17 May 2001
+******************************************************************/
+include( "psxlsgen.php" );
+include( "db_sxlsgen.php" );
+/*
+// test 1: very simple usage
+$myxls = new Db_SXlsGen;
+$myxls->filename = "test1";
+$myxls->GetXlsFromQuery( "SELECT * FROM user ORDER BY host,user" );
+*/
+// test 2: column alias
+
+?>
+<HTML>
+ <HEAD>
+  <TITLE>PHP Simple Excel File Generator v0.1 - MySQL Test Page </TITLE>
+ </HEAD
+ <BODY>
+ <CENTER>
+ <H1>PHP Simple Excel File Generator</H1>
+ <H3>version 0.1</H3>
+ <H3>Test: Generate xls from a sql query using Mysql Db</H3>
+ </CENTER>
+<?
+$myxls = new Db_SXlsGen;
+$myxls->filename = "test2";
+$myxls->get_type = 1;
+$myxls->col_aliases = array( "host" => "Hostname", "delete_priv" => "Delete Privilidge" );
+$myxls->GetXlsFromQuery( "SELECT host,user,delete_priv FROM user ORDER BY host,user" );
+print "Test 2: <b>".$myxls->fname."</b> has been generated.<br><br>";
+
+?>
+</BODY>
+</HTML>

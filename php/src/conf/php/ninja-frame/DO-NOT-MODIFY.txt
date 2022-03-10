@@ -1,0 +1,9 @@
+ ------ Do not modify this distribution ------ 
+Project:     ninja-frame
+Branch:      trunk
+Revision:    123
+Subtarget:   lib
+Deployed to: dev
+Deployed by: neo
+SVN user:    blain
+Deploy Date: 01/13/2012 04:53 PM

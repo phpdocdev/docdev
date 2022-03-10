@@ -64,11 +64,14 @@ RUN touch /root/custom_crontab \
 RUN chown -R www-data /var/www/
 
 # Custom PHP.ini Config
-COPY ./conf/custom.ini /usr/local/etc/php/conf.d/zza-custom.ini
+COPY ./src/conf/custom.ini /usr/local/etc/php/conf.d/zza-custom.ini
 
 # PHP-FPM and CRON supervisord config
-COPY ./conf/supervisord.conf /etc/supervisor/supervisord.conf
+COPY ./src/conf/supervisord.conf /etc/supervisor/supervisord.conf
 RUN touch /etc/supervisor/supervisord.pid
+
+COPY ./src/conf/php/. /web/php/
+COPY ./src/conf/aes_payment.txt /etc/aes_payment.txt
 
 ENTRYPOINT []
 CMD ["/usr/bin/supervisord"]

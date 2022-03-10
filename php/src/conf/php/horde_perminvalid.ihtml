@@ -1,0 +1,42 @@
+<html>
+ <head>
+  <title>Permission Denied</title>
+  <style type="text/css">
+  <!--
+    body { font-family: Geneva, Arial, Helvetica, sans-serif }
+    td   { font-family: Geneva, Arial, Helvetica, sans-serif }
+  -->
+  </style>
+ </head>
+
+<body bgcolor="#dddddd" link="#dddddd" alink="white" vlink="#999999">
+
+<table height="100%" width="100%"><tr><td>
+<table border=0 bgcolor="#002266" align="center" cellspacing=0 cellpadding=2><tr><td>
+<table border=0 bgcolor="white" align="center" cellspacing=2 cellpadding=4 width="100%">
+ <tr bgcolor="white">
+  <td colspan=2 align="right"><img src="/horde/graphics/hordebadge.gif" border=0></td>
+ </tr>
+</table>
+
+<table border=0 align="center" cellspacing=2 cellpadding=4 width="100%">
+ <tr valign="center">
+  <th valign="top" bgcolor="#003399" align="right"><font color="white" size="2">Permission Denied</font></th>
+  <td bgcolor="#003399" align="left"><font color="white" size="2">
+  <?php if (!isset($auth->auth['uname']) || $auth->auth['uname'] == 'nobody'): ?>
+  You are accessing the system as a <b>Guest</b>. The calendar, addressbook, and some other features require you to identify yourself.
+  Please <a href="/horde/login.php3?relogin=1">log in</a> if you wish to access these features.
+  <?php else: ?>
+  You are logged in as <b><?php echo $auth->auth['uname'] ?></b>, and do not have sufficient priveleges to access this page. You may
+  <a href="/horde/login.php3?relogin=1">log in as another user</a>, or go <a href="javascript:history.back()">back to the previous page</a>.
+  <?php endif; ?>
+  </font></td>
+ </tr>
+</table>
+
+</td></tr></table>
+</td></tr></table>
+</form>
+
+</body>
+</html>

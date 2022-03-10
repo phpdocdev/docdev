@@ -1,0 +1,22 @@
+<?php
+/****************************************************************
+* Script         : Simple test examples for PhpSimpleXlsGen
+* Project        : PHP SimpleXlsGen
+* Author         : Erol Ozcan <eozcan@superonline.com>
+* Version        : 0.1
+* Copyright      : GNU LGPL
+* URL            : http://psxlsgen.sourceforge.net
+* Last modified  : 17 May 2001
+******************************************************************/
+include( "psxlsgen.php" );
+
+$myxls = new PhpSimpleXlsGen();
+$myxls->totalcol = 2;
+$myxls->InsertText( "Erol" );
+$myxls->InsertText( "Ozcan" );
+$myxls->InsertText( "This text should be at (2,0)" );
+$myxls->ChangePos(4,0);
+$myxls->InsertText( "You must pay" );
+$myxls->InsertNumber( 30.48 );
+$myxls->WriteText_pos(4,2, "USD to use this class :-))" );         // hidden costs :-))
+$myxls->SendFile();

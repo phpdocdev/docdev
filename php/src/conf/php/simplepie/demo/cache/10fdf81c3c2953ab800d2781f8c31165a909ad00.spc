@@ -1,0 +1,1 @@
+a:2:{s:3:"url";s:31:"http://www.joshmoody.com/feeds/";s:8:"feed_url";s:30:"http://www.joshmoody.com/feed/";}

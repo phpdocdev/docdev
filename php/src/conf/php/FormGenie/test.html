@@ -1,0 +1,49 @@
+<html>
+<head>
+<title>Untitled Document</title>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+</head>
+
+<body bgcolor="#FFFFFF" text="#000000"><form method="POST" action="processemail.php">
+<input type="hidden" name="emailto" value="wendy@ark.org">
+<input type="hidden" name="emailtemplate" value="/web/shtml/development/wendy/formgenie/test_template.html">
+<input type="hidden" name="confirmationpage" value="/web/shtml/development/wendy/formgenie/thank_you.html">
+<input type="hidden" name="subject" value="Test Email ">
+<input type="hidden" name="emailfrom" value="eforms@ark.org">
+<input type="hidden" name="contactemail" value="wendy-test@ark.org">
+<input type="hidden" name="emailbody" value="Attached is the form that was submitted!">
+
+
+<p> Name: 
+  <input type="text" name="name">
+</p>
+<p>Address: 
+  <input type="text" name="address">
+</p>
+<p>City:
+  <input type="text" name="city">
+</p>
+<p>State:
+  <input type="text" name="state">
+</p>
+  <p>Zip: 
+    <input type="text" name="zip">
+  </p>
+  <p>Is this a pretty form? 
+    <input type="radio" name="pretty_form" value="Y">
+    Yes 
+    <input type="radio" name="pretty_form" value="N">
+    No </p>
+  <p>Check all that apply 
+    <input type="checkbox" name="subway" value="X">
+    Subway 
+    <input type="checkbox" name="mcdonalds" value="X">
+    McDonald's 
+    <input type="checkbox" name="kfc" value="X">
+    Kentucky Fried Chicken</p>
+  <p>
+  <input type="submit" name="Submit" value="Submit">
+</p>
+</form>
+</body>
+</html>

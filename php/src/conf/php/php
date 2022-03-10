@@ -1,0 +1,213 @@
+<?php
+/*
+ * Session Management for PHP3
+ *
+ * Copyright (c) 1998,1999 SH Online Dienst GmbH
+ *                    Boris Erdmann, Kristian Koehntopp
+ *
+ * $Id: auth.inc,v 1.1.1.1 2001/05/08 21:49:56 david Exp $
+ *
+ */ 
+
+class Auth {
+  var $classname = "Auth";
+  var $persistent_slots = array("auth");
+  
+  var $lifetime = 15;             ## Max allowed idle time before
+                                  ## reauthentication is necessary
+  
+  var $mode = "log";              ## "log" for login only systems,
+                                  ## "reg" for user self registration
+
+  var $magic = "";                ## Used in uniqid() generation
+
+  var $nobody = false;            ## If true, a default auth is created...
+
+  ## End of user qualifiable settings.
+
+  var $auth = array();            ## Data array
+  var $in;
+  var $db;
+  var $that;
+
+  ##
+  ## Initialization
+  ##
+  function start() {
+    global $sess, $username, $cancel_login;
+
+    if ( ! $this->in ) {
+      $this->in = true;
+      $sess->register("auth");
+
+      ## back compatibility: if d_c is set, create db object
+	  if(isset($this->database_class)) {
+		  $class = $this->database_class;
+		  $this->db = new $class;
+	  }
+
+	  if(isset($this->that_class)) {
+		  $class = $this->that_class;
+		  $this->that = new $class;
+		  $this->that->ac_start();
+	  }
+  
+      ## DEFAUTH handling: If there is no uid yet, fake one that won't expire.
+      if ( $this->nobody && ( ! isset($this->auth["uid"]) ) ) {
+        $this->auth["uname"] = $this->auth["uid"] = "nobody";
+        $this->auth["exp"] = 0x7fffffff;
+      }
+
+      $uid     = isset($this->auth["uid"]) ? $this->auth["uid"] : false;
+      $expired = isset($this->auth["exp"]) ? ( time() > $this->auth["exp"] ) : true;
+
+    } else {
+
+      $expired = true;
+      $uid     = false;
+
+    }
+
+    $loop    = true;
+
+    while ( $loop ) {
+#DEB  printf("loop = %s  expired = %s  uid = %s frozen uid = %s<br>\n", $loop, $expired, $uid, $this->auth["uid"]);
+      switch ($this->mode) {
+
+        case "yes":
+        case "log":
+#DEB      printf("case log<br>\n");
+          if ((($expired == true) && ($uid != "form")) || (!$uid)) {
+#DEB        printf("subcase 1<br>\n");
+
+            $this->auth_loginform();
+            $this->auth["uid"]="form";
+            $sess->freeze();
+            exit;
+
+          } elseif ( "form" == $uid && !isset($cancel_login)) {
+#DEB        printf("subcase 2<br>\n");
+
+			if ($this->nobody && !isset($username)) {
+				$this->auth["uname"] = $this->auth["uid"] = "nobody";
+				$loop = false;
+			} else {
+				$uid     = $this->auth_validatelogin();
+				$expired = false;
+			}
+          } else {
+#DEB        printf("subcase 3<br>\n");
+
+            $freeze = ($this->auth["uid"] != $uid);
+
+            $this->auth["uid"] = $uid;
+            ## DEFAUTH handling: do not update exp for nobody.
+            if ($uid != "nobody")
+              $this->auth["exp"] = time() + 60 * $this->lifetime;
+            $loop=false;
+
+            if ( $freeze ) {
+#DEB          printf("freeze called<br>\n");
+              $sess->freeze();
+            }
+
+          }
+
+        break;
+        case "reg":
+#DEB      printf("case reg<br>\n");
+          switch ($uid) {
+
+            case false:
+#DEB          printf("subcase 1<br>\n");
+
+              $this->auth_registerform();
+              $this->auth["uid"]="form";
+              $sess->freeze();
+              exit;
+
+            break;
+            case "form":
+#DEB          printf("subcase 2<br>\n");
+
+              $uid = md5(uniqid($this->magic));
+              $uid = $this->auth_doregister($uid);
+              
+            break;
+            default:
+#DEB          printf("case default<br>\n");
+
+              $this->mode="log";
+
+            break;
+
+          }
+
+        break; 
+        default:
+          $loop = false;
+        break;
+      }
+    }
+
+  }
+
+  function login_if( $t ) {
+    if ( $t && ( "nobody" == $this->auth["uid"] ) ) {
+      $this->start();
+    }
+  }
+
+  function unauth($nobody = false) {
+    $this->auth["uid"]   = "";
+    $this->auth["perm"]  = "";
+    $this->auth["exp"]   = 0;
+
+    ## DEFAUTH handling: reauthenticate as nobody instead.
+    if($nobody) {
+        $this->auth["uname"] = $this->auth["uid"] = "nobody";
+	$this->auth["exp"] = 0x7fffffff;
+    }
+  }
+  
+
+  function logout($nobody = "") {
+    global $sess;
+    
+    $sess->unregister("auth");
+    $this->auth["uname"] = "nobody";
+    $this->unauth($nobody == "" ? $this->nobody : $nobody);
+  }
+
+  function is_authenticated() {
+    if ($this->auth["uid"] && (time() < $this->auth["exp"])) {
+      return $this->auth["uid"];
+    } else
+      return false;
+  }
+    
+  ################################################################################
+  ##
+  ## Helper functions
+  ##
+  function url() {
+    return $GLOBALS["sess"]->self_url();
+  }
+
+  function purl() {
+    print $GLOBALS["sess"]->self_url();
+  }
+
+  ##
+  ## Authentication dummies. Must be overridden by user.
+  ##
+
+  function auth_loginform() { ; }
+
+  function auth_validatelogin() { ; }
+
+  function auth_registerform() { ; }
+
+  function auth_doregister() { ; }
+}
+?>

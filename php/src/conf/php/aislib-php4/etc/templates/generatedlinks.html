@@ -1,0 +1,22 @@
+<table align="center" class="prototype">
+  <tr class="prototype_title">
+    <td colspan="2">This is a prototype (<%% $APPLICATION_NAME %%>)</td>
+  </tr>
+  <tr class="topaligned">
+    <td colspan="2" align="center"><span class="page_settings_title">Page: </span><span class="link_current"><%% $page %%></span></td>
+  </tr>
+  <tr class="links_title">
+    <td width="20">&nbsp;</td>
+    <td>Possible links:</td>
+  </tr>
+ <tr>
+    <td width="20">&nbsp;</td>
+    <td class="link">
+      <%% foreach item=trigger from=$triggers %%>
+      <%% if ($trigger->type  == "generated") %%>
+        <a href="proto.php?page=<%% $trigger->ref %%>"><%% $trigger->caption %%></a></br>
+      <%%/if%%>
+      <%%/foreach%%>
+    </td>
+  </tr>
+</table>

@@ -1,0 +1,90 @@
+<html>
+ <head>
+  <title>Horde Login</title>
+  <style type="text/css">
+  <!--
+    body { font-family: Geneva, Arial, Helvetica, sans-serif }
+    td   { font-family: Geneva, Arial, Helvetica, sans-serif }
+  -->
+  </style>
+ <script language="javascript" src="/horde/lib/js/md5.js"></script>
+ <script language="javascript">
+ <!--
+  function doChallengeResponse() {
+    str = document.hordeLogin.username.value + ":" + MD5(document.hordeLogin.password.value) + ":" + document.hordeLogin.challenge.value;
+    document.hordeLoginMD5.username.value = document.hordeLogin.username.value;
+    document.hordeLoginMD5.response.value = MD5(str);
+    document.hordeLoginMD5.submit();
+  }
+
+ // -->
+ </script>
+ </head>
+
+<body bgcolor="#dddddd">
+
+<form name="hordeLogin" action="<?php $this->purl() . $sess->padd_query(array('hordeLogin' => 1)) ?>" method="post">
+<table height="100%" width="100%"><tr><td>
+<table border=0 bgcolor="#002266" align="center" cellspacing=0 cellpadding=2><tr><td>
+<table border=0 bgcolor="white" align="center" cellspacing=2 cellpadding=4 width="100%">
+ <tr bgcolor="white">
+  <td colspan=2 align="right"><img src="/horde/graphics/hordebadge.gif" border=0></td>
+ </tr>
+</table>
+
+<table border=0 align="center" cellspacing=2 cellpadding=4 width="100%">
+ <tr valign="center">
+  <th align="right"><font color="white" size=2>Username</font></th>
+  <td align="left"><font color="white" size=2><input tabindex=1 type="text" name="username" value="<?php if (isset($this->auth['uname']) && $this->auth['uname'] != 'nobody') echo $this->auth["uname"] ?>" size=32 maxlength=32></font></td>
+  <td rowspan=2 align="center"><font size=2 color="white"><input tabindex=3 onClick="doChallengeResponse(); return false;" type="submit" name="loginSubmit" value="Login"></font></td>
+ </tr>
+ <tr valign="center">
+  <th align="right"><font color="white" size="2">Password</font></th>
+  <td align="left"><font color="white" size="2"><input tabindex=2 type="password" name="password" size=32 maxlength=32></font></td>
+ </tr>
+</table>
+
+<?php global $username; if (isset($username)): ?>
+<!-- failed login code -->
+
+<table border=0 bgcolor="white" align="center" cellspacing=2 cellpadding=4 width="100%">
+ <tr>
+  <td><font color="#00266cc"><b>Login failed.</b><br>Either your username or your password
+       is incorrect.<br>Please try again, or <a href="<?php $sess->purl('signup.php3') ?>">sign up</a> for an account.
+       </font></td>
+  </tr>
+ </table>
+
+ <?php endif; ?>
+
+</td></tr></table>
+</td></tr></table>
+
+<!-- Set up the form with the challenge value and an empty reply value -->
+<input type="hidden" name="challenge" value="<?php echo $challenge ?>">
+<input type="hidden" name="response" value="">
+<input type="hidden" name="cancel_login" value="">
+</form>
+
+<!-- Use this for challenge-response so that the password does not get sent cleartext anyway -->
+<form name="hordeLoginMD5" action="<?php $this->purl() . $sess->padd_query(array('hordeLogin' => 1)) ?>" method="post">
+<input type="hidden" name="username" value="">
+<input type="hidden" name="challenge" value="<?php echo $challenge ?>">
+<input type="hidden" name="response" value="">
+<input type="hidden" name="cancel_login" value="">
+</form>
+
+</body>
+
+<script language="JavaScript">
+<!--
+if (document.hordeLogin.username.value == '') {
+  document.hordeLogin.username.focus();
+} else {
+  document.hordeLogin.password.focus();
+}
+// -->
+</script>
+
+</html>
+<!-- $Id: horde_loginform.ihtml,v 1.1.1.1 2001/05/08 21:49:57 david Exp $ -->
