@@ -1,8 +1,5 @@
 FROM php:5.6-fpm
 
-LABEL maintainer.name="Pivotal Agency" \
-      maintainer.email="tech@pvtl.io"
-
 ENV PATH /usr/local/go/bin:/root/.composer/vendor/bin:$PATH
 
 RUN apt update && apt install -y --no-install-recommends \

@@ -1,11 +1,6 @@
 #!/usr/bin/env bash
 
-package=$1
-if [[ -z "$package" ]]; then
-  echo "usage: $0 <package-name>"
-  exit 1
-fi
-package_name=$package
+package_name="docdev"
 
 #the full list of the platforms: https://golang.org/doc/install/source#environment
 platforms=(

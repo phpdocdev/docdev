@@ -1,21 +1,46 @@
 # Getting Started
 
+## Prerequisites
+
+`MySQL` and `Redis` are both served from your host machine and are accessible via `mysql` and `redis` hostnames in your application. I reccomend using [DBNgin](https://dbngin.com) to host the services on your host machine.
+
+## Commands
+```
+NAME: docdev
+
+COMMANDS:
+   init, i   Initialize configuration and install mkcert
+   certs, c  Generate and install the certificates
+   start, s  Bring up the docker containers
+   exec, e   Start docker container shell
+   php, p    Change php version (requires "start" to rebuild). Valid values: 54, 56, 70, 71, 72, 73, 74
+   help, h   Shows a list of commands or help for one command
+
+GLOBAL OPTIONS:
+   --help, -h  show help
+```
+
+## Command Usage
+
 Create .env and install mkcert (brew)
 
-`make setup`
+`docdev init`
 
 Create SSL certificate and CA
 
-`make ssl`
+`docdev certs`
 
 Start the containers and install certificates
 
-`make start`
+`docdev start`
 
 Shell into the php container
 
-`make exec`
+`docdev exec`
 
+Change PHP version
+
+`docdev php 74 && docdev start`
 
 # Usage
 ## Environment
@@ -35,4 +60,4 @@ Nginx is configured to serve from the `public` folder of each project. If you're
 
 You will access your projects via `https://myproject.loc`
 
-> If you add any new projects, simply run `make ssl && make start` to refresh the pathings.
+> If you add any new projects, simply run `docdev certs && docdev start` to refresh the pathings.

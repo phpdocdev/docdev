@@ -1,7 +1,6 @@
 FROM alpine:3.6
 
-LABEL maintainer.name="Pivotal Agency" \
-      maintainer.email="tech@pvtl.io"
+
 
 ENV NGINX_VERSION 1.13.5
 

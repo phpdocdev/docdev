@@ -1,7 +1,6 @@
 FROM httpd:2.4
 
-LABEL maintainer.name="Pivotal Agency" \
-      maintainer.email="tech@pvtl.io"
+
 
 # Set umask to make generated files accessible on local machine
 RUN echo "umask 002" >> /usr/local/apache2/envvars

@@ -1,7 +1,6 @@
 FROM wearepvtl/php-fpm-7.3:latest
 
-LABEL maintainer.name="Pivotal Agency" \
-      maintainer.email="tech@pvtl.io"
+
 
 # Setup user (to stay in-sync with the host system's user)
 ARG CUSTOM_USER_NAME

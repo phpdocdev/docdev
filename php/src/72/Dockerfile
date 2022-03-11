@@ -1,7 +1,6 @@
 FROM php:7.2-fpm
 
-LABEL maintainer.name="Pivotal Agency" \
-      maintainer.email="tech@pvtl.io"
+
 
 ENV PATH /usr/local/go/bin:/root/.composer/vendor/bin:$PATH
 

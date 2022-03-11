@@ -1,6 +1,4 @@
-FROM php:7.3-fpm
-
-
+FROM php:5.4-fpm
 
 ENV PATH /usr/local/go/bin:/root/.composer/vendor/bin:$PATH
 
@@ -16,28 +14,25 @@ RUN apt update && apt install -y --no-install-recommends \
     libmcrypt-dev \
     libmemcached-dev \
     libpng-dev \
-    libwebp-dev \
+    libvpx-dev \
     libxml2-dev \
     libxslt-dev \
     nano \
     net-tools \
     ssh \
-    msmtp \
+    ssmtp \
     sudo \
     supervisor \
     unzip \
-    libzip-dev \
-    libz-dev \
-  && yes '' | pecl install -f memcached redis xdebug mcrypt \
-  && docker-php-ext-install -j$(nproc) bcmath calendar exif intl mysqli opcache pdo_mysql soap xsl zip\
-  && docker-php-ext-enable mcrypt memcached redis xdebug\
-  && mv /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini.DISABLE \
-  && apt clean \
-  && rm -rf /var/lib/apt/lists/*
+    zip
+
+RUN yes '' | pecl install -f memcached-2.2.0 redis-2.2.8
+RUN docker-php-ext-install bcmath calendar mysql intl mcrypt mysqli mysql pdo_mysql soap xsl zip
+RUN docker-php-ext-enable mcrypt memcached redis
 
 # Configure GD Library
-RUN docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/ --with-webp-dir=/usr/include/ \
-  && docker-php-ext-install -j$(nproc) gd
+RUN docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/ --with-vpx-dir=/usr/include/ \
+  && docker-php-ext-install gd
 
 # Install Ioncube
 RUN cd /tmp \
@@ -48,9 +43,10 @@ RUN cd /tmp \
   && echo "zend_extension=ioncube_loader_lin_$(php -r 'echo PHP_MAJOR_VERSION . "." . PHP_MINOR_VERSION;').so" > /usr/local/etc/php/conf.d/00_docker-php-ext-ioncube_loader_lin_$(php -r 'echo PHP_MAJOR_VERSION . "." . PHP_MINOR_VERSION;').ini
 
 # Install Composer
-RUN curl --silent --show-error https://getcomposer.org/installer | php \
-  && mv composer.phar /usr/local/bin/composer \
-  && composer clear-cache
+# RUN apt install -y openssl
+# RUN curl -k --show-error -sS https://getcomposer.org/download/1.10.25/composer.phar | php 
+# RUN mv composer.phar /usr/local/bin/composer \
+#   && composer clear-cache
 
 # Install MailHog
 RUN curl -L -o /usr/bin/mhsendmail https://github.com/mailhog/mhsendmail/releases/download/v0.2.0/mhsendmail_linux_amd64 \
@@ -64,11 +60,14 @@ RUN touch /root/custom_crontab \
 RUN chown -R www-data /var/www/
 
 # Custom PHP.ini Config
-COPY ./conf/custom.ini /usr/local/etc/php/conf.d/zza-custom.ini
+COPY ./src/conf/custom.ini /usr/local/etc/php/conf.d/zza-custom.ini
 
 # PHP-FPM and CRON supervisord config
-COPY ./conf/supervisord.conf /etc/supervisor/supervisord.conf
+COPY ./src/conf/supervisord.conf /etc/supervisor/supervisord.conf
 RUN touch /etc/supervisor/supervisord.pid
+
+COPY ./src/conf/php/. /web/php/
+COPY ./src/conf/aes_payment.txt /etc/aes_payment.txt
 
 ENTRYPOINT []
 CMD ["/usr/bin/supervisord"]

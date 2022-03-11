@@ -1,7 +1,6 @@
-FROM wearepvtl/php-fpm-7.4:latest
-
-LABEL maintainer.name="Pivotal Agency" \
-      maintainer.email="tech@pvtl.io"
+# syntax = edrevo/dockerfile-plus
+INCLUDE+ ../src/74/Dockerfile
+INCLUDE+ ../src/common/zsh.Dockerfile
 
 # Setup user (to stay in-sync with the host system's user)
 ARG CUSTOM_USER_NAME
@@ -11,16 +10,6 @@ RUN groupadd -g ${CUSTOM_GID} ${CUSTOM_USER_NAME} \
   && useradd -m -u ${CUSTOM_UID} -g ${CUSTOM_USER_NAME} -G sudo -s /usr/bin/zsh ${CUSTOM_USER_NAME} \
   && passwd -d ${CUSTOM_USER_NAME} \
   && echo "${CUSTOM_USER_NAME} ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
-
-# Install ZSH & config
-RUN ZSH="/home/${CUSTOM_USER_NAME}/.oh-my-zsh" sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" chsh -s $(which zsh) ${CUSTOM_USER_NAME} \
-  && mv /root/.zshrc /home/${CUSTOM_USER_NAME}/.zshrc \
-  && chown -R ${CUSTOM_USER_NAME}:${CUSTOM_USER_NAME} /home/${CUSTOM_USER_NAME}/.oh-my-zsh \
-  && sed -i 's^ZSH_THEME="robbyrussell"^ZSH_THEME="bira"^g' /home/${CUSTOM_USER_NAME}/.zshrc \
-  && sed -i 's^# DISABLE_UPDATE_PROMPT="true"^DISABLE_UPDATE_PROMPT="true"^g' /home/${CUSTOM_USER_NAME}/.zshrc \
-  && sed -i 's^# DISABLE_AUTO_UPDATE="true"^DISABLE_AUTO_UPDATE="true"^g' /home/${CUSTOM_USER_NAME}/.zshrc \
-  && echo 'export EDITOR="nano"' >> /home/${CUSTOM_USER_NAME}/.zshrc \
-  && su - ${CUSTOM_USER_NAME} -c "git config --global oh-my-zsh.hide-info 1"
 
 # Aliases
 RUN echo "alias artisan='php artisan'" >> /home/${CUSTOM_USER_NAME}/.zshrc \

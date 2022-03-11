@@ -10,6 +10,53 @@ import (
 	"github.com/urfave/cli"
 )
 
+func main() {
+	if _, err := os.Stat(".env"); os.IsNotExist(err) {
+		os.Chdir("../")
+	}
+	loadEnv()
+
+	app := &cli.App{
+		Commands: []cli.Command{
+		  {
+			Name:    "init",
+			Aliases: []string{"i"},
+			Usage:   "Initialize configuration and install mkcert",
+			Action:  Init,
+		  },
+		  {
+			Name:    "certs",
+			Aliases: []string{"c"},
+			Usage:   "Generate and install the certificates",
+			Action:  GenerateCerts,
+		  },
+		  {
+			Name:    "start",
+			Aliases: []string{"s"},
+			Usage:   "Bring up the docker containers",
+			Action:  StartContainer,
+		  },
+		  {
+			Name:    "exec",
+			Aliases: []string{"e"},
+			Usage:   "Start docker container shell",
+			Action:  ExecContainer,
+		  },
+		  {
+			Name:    "php",
+			Aliases: []string{"p"},
+			Usage:   "Change php version (requires \"start\" to rebuild). Valid values: 54, 56, 70, 71, 72, 73, 74",
+			Action:  ChangePhpVersion,
+		  },
+		},
+	  }
+	
+	  err := app.Run(os.Args)
+	  if err != nil {
+		log.Fatal(err)
+	  }
+}
+
 func Init (c *cli.Context) error {
 	_, err := exec.Command("cp", ".env.example", ".env").Output()
     if err != nil {
@@ -60,7 +107,7 @@ func GenerateCerts(c *cli.Context) error {
 }
 
 func StartContainer(c *cli.Context) error {
-	startCmd := `docker-compose up --quiet-pull --force-recreate --build -V -d`
+	startCmd := `docker-compose up --force-recreate --build -V -d`
 	start := exec.Command("bash", "-c",  startCmd)
 
     fmt.Printf("%v\n", start)
@@ -140,88 +187,3 @@ func loadEnv() {
 		log.Fatal("Error loading .env file")
 	}
 }
-
-func main() {
-	if _, err := os.Stat(".env"); os.IsNotExist(err) {
-		os.Chdir("../")
-	}
-	loadEnv()
-
-	app := &cli.App{
-		Commands: []cli.Command{
-		  {
-			Name:    "init",
-			Aliases: []string{"a"},
-			Usage:   "Initialize configuration and install mkcert",
-			Action:  Init,
-		  },
-		  {
-			Name:    "certs",
-			Aliases: []string{"c"},
-			Usage:   "Generate and install the certificates",
-			Action:  GenerateCerts,
-		  },
-		  {
-			Name:    "start",
-			Aliases: []string{"s"},
-			Usage:   "Bring up the docker containers",
-			Action:  StartContainer,
-		  },
-		  {
-			Name:    "exec",
-			Aliases: []string{"e"},
-			Usage:   "Start docker container shell",
-			Action:  ExecContainer,
-		  },
-		  {
-			Name:    "php",
-			Aliases: []string{"p"},
-			Usage:   "Start docker container shell",
-			Action:  ChangePhpVersion,
-		  },
-		},
-	  }
-	
-	  err := app.Run(os.Args)
-	  if err != nil {
-		log.Fatal(err)
-	  }
-}
-
-// func execute() {
-
-// 	var name string
-// 	var schedule string
-// 	var command string
-
-// 	flag.StringVar(&name, "name", "", "Job Name")
-// 	flag.StringVar(&name, "n", "", "Job Name (shorthand)")
-
-// 	flag.Parse()
-
-//     // here we perform the pwd command.
-//     // we can store the output of this in our out variable
-//     // and catch any errors in err
-//     out, err := exec.Command("ls").Output()
-
-//     // if there is an error with our execution
-//     // handle it here
-//     if err != nil {
-//         fmt.Printf("%s", err)
-//     }
-//     // as the out variable defined above is of type []byte we need to convert
-//     // this to a string or else we will see garbage printed out in our console
-//     // this is how we convert it to a string
-//     fmt.Println("Command Successfully Executed")
-//     output := string(out[:])
-//     fmt.Println(output)
-
-//     // let's try the pwd command herer
-//     out, err = exec.Command("pwd").Output()
-//     if err != nil {
-//         fmt.Printf("%s", err)
-//     }
-//     fmt.Println("Command Successfully Executed")
-//     output = string(out[:])
-//     fmt.Println(output)
-// }
