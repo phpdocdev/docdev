@@ -11,6 +11,7 @@ NAME: docdev
 COMMANDS:
    init, i   Initialize configuration and install mkcert
    certs, c  Generate and install the certificates
+   hosts     Generate hosts file, backed up and produced at at ./host. Will replace your system hostfile.
    start, s  Bring up the docker containers
    exec, e   Start docker container shell
    php, p    Change php version (requires "start" to rebuild). Valid values: 54, 56, 70, 71, 72, 73, 74
