@@ -1,11 +1,11 @@
-module docker-dev
+module docdev
 
 go 1.17
 
 require (
 	github.com/joho/godotenv v1.4.0
 	github.com/txn2/txeh v1.3.0
-	github.com/urfave/cli v1.22.5
+	github.com/urfave/cli/v2 v2.3.0
 )
 
 require (

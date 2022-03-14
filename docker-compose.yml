@@ -48,6 +48,7 @@ services:
         - CUSTOM_USER_NAME=${CUSTOM_USER_NAME}
         - CUSTOM_UID=${CUSTOM_UID}
         - CUSTOM_GID=${CUSTOM_GID}
+        - PHPV=${PHPV}
     ports:
       - "9000:9000"
       - "3000:3000" # Browser Sync

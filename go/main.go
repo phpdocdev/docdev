@@ -9,7 +9,7 @@ import (
 
 	"github.com/joho/godotenv"
 	"github.com/txn2/txeh"
-	"github.com/urfave/cli"
+	"github.com/urfave/cli/v2"
 )
 
 func main() {
@@ -18,13 +18,55 @@ func main() {
 	}
 	loadEnv()
 
+	flags := []cli.Flag{
+		&cli.BoolFlag{
+			Name:    "dry-run",
+			Aliases: []string{"d"},
+			Usage:   "Dry run",
+		},
+	}
+
 	app := &cli.App{
-		Commands: []cli.Command{
+
+		Flags: flags,
+		Commands: []*cli.Command{
 			{
 				Name:    "init",
 				Aliases: []string{"i"},
 				Usage:   "Initialize configuration and install mkcert",
 				Action:  Init,
+				Flags: append([]cli.Flag{
+					&cli.StringFlag{
+						Name:    "tld",
+						Aliases: []string{"t"},
+						Value:   "loc",
+						Usage:   "TLD for project hostnames",
+					},
+					&cli.StringFlag{
+						Name:    "root",
+						Aliases: []string{"r"},
+						Value:   os.Getenv("HOME") + "/repos/",
+						Usage:   "Root directory containing your projects",
+					},
+					&cli.StringFlag{
+						Name:    "php",
+						Aliases: []string{"p"},
+						Value:   "74",
+						Usage:   "Initial PHP version",
+					},
+					&cli.BoolFlag{
+						Name:  "certs",
+						Usage: "Generate and install certificates",
+					},
+					&cli.BoolFlag{
+						Name:  "hosts",
+						Usage: "Generate hosts file",
+					},
+					&cli.BoolFlag{
+						Name:  "start",
+						Usage: "Start containers immediately",
+					},
+				}, flags...),
 			},
 			{
 				Name:    "certs",
@@ -35,14 +77,22 @@ func main() {
 			{
 				Name:    "hosts",
 				Aliases: []string{},
-				Usage:   "Generate hosts file, backed up and produced at at ./host. Will replace your system hostfile.",
+				Usage:   "Generate hosts file, backed up and produced at ./host. Will replace your system hostfile.",
 				Action:  GenerateHosts,
+				Flags:   flags,
 			},
 			{
 				Name:    "start",
 				Aliases: []string{"s"},
 				Usage:   "Bring up the docker containers",
 				Action:  StartContainer,
+				Flags: []cli.Flag{
+					&cli.BoolFlag{
+						Name:    "exec",
+						Aliases: []string{"e"},
+						Usage:   "Start container shell after starting",
+					},
+				},
 			},
 			{
 				Name:    "exec",
@@ -55,6 +105,13 @@ func main() {
 				Aliases: []string{"p"},
 				Usage:   "Change php version (requires \"start\" to rebuild). Valid values: 54, 56, 70, 71, 72, 73, 74",
 				Action:  ChangePhpVersion,
+				Flags: []cli.Flag{
+					&cli.BoolFlag{
+						Name:    "start",
+						Aliases: []string{"s"},
+						Usage:   "Start the containers after switching the PHP version",
+					},
+				},
 			},
 		},
 	}
@@ -71,6 +128,12 @@ func Init(c *cli.Context) error {
 		fmt.Printf("%s", err)
 	}
 
+	setEnvFileValue("TLD_SUFFIX", c.String("tld"))
+	setEnvFileValue("DOCUMENTROOT", c.String("root"))
+	setEnvFileValue("PHPV", c.String("php"))
+
+	fmt.Printf("%s", "Created .env file\n")
+
 	mkcert, err := exec.Command("which", "mkcert").Output()
 
 	if string(mkcert[:]) == "" {
@@ -80,19 +143,37 @@ func Init(c *cli.Context) error {
 		}
 	}
 
+	if c.Bool("certs") {
+		fmt.Printf("%s", "Generating certificates...\n")
+		err = GenerateCerts(c)
+		if err != nil {
+			return cli.Exit(err, 86)
+		}
+	}
+	if c.Bool("hosts") {
+		fmt.Printf("%s", "Generating hosts...\n")
+		err = GenerateHosts(c)
+		if err != nil {
+			return cli.Exit(err, 86)
+		}
+	}
+	if c.Bool("start") {
+		fmt.Printf("%s", "Starting containers...\n")
+		err = StartContainer(c)
+		if err != nil {
+			return cli.Exit(err, 86)
+		}
+	}
+
 	return err
 }
 
 func GenerateCerts(c *cli.Context) error {
 
-	nameCmd := `ls ` + os.Getenv("DOCUMENTROOT") + ` | grep -v / | tr '\n' " " | sed 's/ /\.\l\o\c /g'`
-	names, err := exec.Command("bash", "-c", nameCmd).Output()
-	if err != nil {
-		fmt.Printf("%s", err)
-	}
+	names := getProjectHosts()
 
-	mkCertCmd := "mkcert -cert-file cert/nginx.pem -key-file cert/nginx.key localhost 127.0.0.1 ::1 " + string(names[:])
-	_, err = exec.Command("bash", "-c", mkCertCmd).Output()
+	mkCertCmd := "mkcert -cert-file cert/nginx.pem -key-file cert/nginx.key localhost 127.0.0.1 ::1 " + names
+	_, err := exec.Command("bash", "-c", mkCertCmd).Output()
 	if err != nil {
 		fmt.Printf("%s", err)
 	}
@@ -104,12 +185,13 @@ func GenerateCerts(c *cli.Context) error {
 
 	mkCertPath = mkCertPath[:len(mkCertPath)-1]
 
-	cpCertCmd := `cp -R "` + string(mkCertPath[:]) + `"/ ./cert/`
-	fmt.Println(cpCertCmd)
+	cpCertCmd := `cp -Rf "` + string(mkCertPath[:]) + `"/ ./cert/`
 	_, err = exec.Command("bash", "-c", cpCertCmd).Output()
 	if err != nil {
 		fmt.Printf("%s", err)
 	}
+
+	fmt.Printf("%s", "Certifcates have been generated.\n")
 
 	return err
 }
@@ -117,7 +199,6 @@ func GenerateCerts(c *cli.Context) error {
 func GenerateHosts(c *cli.Context) error {
 
 	hostctl, err := exec.Command("which", "hostctl").Output()
-
 	if string(hostctl[:]) == "" {
 		_, err = exec.Command("brew", "install", "hostctl").Output()
 		if err != nil {
@@ -135,25 +216,28 @@ func GenerateHosts(c *cli.Context) error {
 		panic(err)
 	}
 
-	nameCmd := `ls ` + os.Getenv("DOCUMENTROOT") + ` | grep -v / | tr '\n' " " | sed 's/ /\.\l\o\c /g'`
-	names, err := exec.Command("bash", "-c", nameCmd).Output()
-	if err != nil {
-		fmt.Printf("%s", err)
-	}
-	nameList := strings.Split(string(names[:]), " ")
+	nameList := getProjectHosts()
 
-	hosts.AddHosts("127.0.0.1", deleteEmptySlice(nameList))
+	removeHosts := strings.Split(nameList, " ")
+	hosts.RemoveHosts(deleteEmptySlice(removeHosts))
+
+	addHosts := strings.ReplaceAll(nameList, ".loc", "."+os.Getenv("TLD_SUFFIX"))
+	addHostList := strings.Split(addHosts, " ")
+	hosts.AddHosts("127.0.0.1", deleteEmptySlice(addHostList))
 
 	err = hosts.SaveAs("host/modified.hosts")
 	if err != nil {
 		fmt.Printf("%s", err)
 	}
 
-	_, err = exec.Command("sudo", "hostctl", "restore", "--from", "host/modified.hosts").Output()
-
-	if err != nil {
-		fmt.Printf("%s", err)
+	if c.Bool("dry-run") == false {
+		_, err = exec.Command("sudo", "hostctl", "restore", "--from", "host/modified.hosts").Output()
+		if err != nil {
+			fmt.Printf("%s", err)
+		}
 	}
+
+	fmt.Printf("%s", "Host file has been generated.\n")
 
 	return err
 }
@@ -192,11 +276,15 @@ func StartContainer(c *cli.Context) error {
 		fmt.Printf("%s", err)
 	}
 
+	if c.Bool("exec") {
+		return ExecContainer(c)
+	}
+
 	return err
 }
 
 func ExecContainer(c *cli.Context) error {
-	execCmd := `docker exec -ti php` + os.Getenv("PHPV") + ` /bin/zsh`
+	execCmd := `docker exec -ti php` + os.Getenv("PHPV") + ` zsh`
 	cmd := exec.Command("bash", "-c", execCmd)
 
 	env := os.Environ()
@@ -219,16 +307,7 @@ func ExecContainer(c *cli.Context) error {
 }
 
 func ChangePhpVersion(c *cli.Context) error {
-	myEnv, err := godotenv.Read()
-	if err != nil {
-		return err
-	}
-
-	myEnv["PHPV"] = c.Args().First()
-	err = godotenv.Write(myEnv, "./.env")
-	if err != nil {
-		return err
-	}
+	err := setEnvFileValue("PHPV", c.Args().First())
 
 	return err
 }
@@ -248,4 +327,26 @@ func deleteEmptySlice(s []string) []string {
 		}
 	}
 	return r
+}
+
+func getProjectHosts() string {
+	nameCmd := `ls ` + os.Getenv("DOCUMENTROOT") + ` | grep -v / | tr '\n' " " | sed 's/ /\.\l\o\c /g'`
+	names, err := exec.Command("bash", "-c", nameCmd).Output()
+	if err != nil {
+		fmt.Printf("%s", err)
+	}
+
+	return string(names[:])
+}
+
+func setEnvFileValue(key string, value string) error {
+	myEnv, err := godotenv.Read()
+	if err != nil {
+		return err
+	}
+
+	myEnv[key] = value
+	err = godotenv.Write(myEnv, "./.env")
+
+	return err
 }

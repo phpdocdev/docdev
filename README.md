@@ -8,28 +8,52 @@
 ```
 NAME: docdev
 
+USAGE:
+   docdev [global options] command [command options] [arguments...]
+
 COMMANDS:
    init, i   Initialize configuration and install mkcert
    certs, c  Generate and install the certificates
-   hosts     Generate hosts file, backed up and produced at at ./host. Will replace your system hostfile.
+   hosts     Generate hosts file, backed up and produced at ./host. Will replace your system hostfile.
    start, s  Bring up the docker containers
    exec, e   Start docker container shell
    php, p    Change php version (requires "start" to rebuild). Valid values: 54, 56, 70, 71, 72, 73, 74
    help, h   Shows a list of commands or help for one command
 
 GLOBAL OPTIONS:
-   --help, -h  show help
+   --dry-run, -d  Dry run (default: false)
+   --help, -h     show help (default: false)
 ```
 
 ## Command Usage
 
-Create .env and install mkcert (brew)
+Create .env, certificates, and modified hosts file then starts the containers.
 
-`docdev init`
+`go run . init --tld loc --php 74 --root /my/projects/dir/ --certs --hosts --start`
+
+```shell
+USAGE:
+   docdev init [command options] [arguments...]
+
+OPTIONS:
+  --tld value, -t value   TLD for project hostnames (default: "loc")
+   --root value, -r value  Root directory containing your projects (default: "$HOME/repos/")
+   --php value, -p value   Initial PHP version (default: "74")
+   --certs                 Generate and install certificates (default: false)
+   --hosts                 Generate hosts file (default: false)
+   --start                 Start containers immediately (default: false)
+   --dry-run, -d           Dry run (default: false)
+   --help, -h              show help (default: false)
+```
 
 Create SSL certificate and CA
 
 `docdev certs`
+
+Create host file
+> Dry run by appending `-d`
+
+`docdev hosts`
 
 Start the containers and install certificates
 
@@ -39,23 +63,32 @@ Shell into the php container
 
 `docdev exec`
 
-Change PHP version
+Change PHP version and start the containers
 
-`docdev php 74 && docdev start`
+`docdev php -s 74`
 
 # Usage
 ## Environment
 
+### Automatic
+
+Run `docdev init` with the appropriate options:
+
+### Manually
 In your `.env` file, modify the value of `DOCUMENTROOT` to the directory containing your repositories. The folder names will represent the hostname to access the specific folder.
 ## Routing
 
+### Automatic
+Run `docdev hosts`
+
+### Manually
 In your `/etc/hosts` file, add `{myproject.loc}     127.0.0.1`
 > `myproject` is the folder/project name.
 > You may also want to install this to manage your host records in Mac system preferences: https://github.com/specialunderwear/Hosts.prefpane
 
 ## Project Configuration
 
-Nginx is configured to serve from the `public` folder of each project. If you're dealing with a non-laravel project, set up a symlink: `ln -s web/ public`
+Apache is configured to serve from the `public` folder of each project. If you're dealing with a non-laravel project, set up a symlink: `ln -s web/ public`
 
 ## Access
 
