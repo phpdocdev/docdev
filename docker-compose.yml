@@ -40,7 +40,7 @@ services:
   # PHP 8.0 ---------------------------------------------------
   php-fpm:
     container_name: php${PHPV}
-    hostname: php${PHPV}
+    hostname: php
     build:
       context: ./php
       dockerfile: ./${PHPV}/Dockerfile
@@ -49,6 +49,7 @@ services:
         - CUSTOM_UID=${CUSTOM_UID}
         - CUSTOM_GID=${CUSTOM_GID}
     ports:
+      - "9000:9000"
       - "3000:3000" # Browser Sync
       - "3001:3001" # Browser Sync UI
     extra_hosts:

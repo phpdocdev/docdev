@@ -32,5 +32,11 @@ RUN chown ${CUSTOM_USER_NAME}:${CUSTOM_USER_NAME} /etc/supervisor/supervisord.pi
 COPY ./56/Dockerfile ./56/custom_crontab* /root/
 RUN /usr/bin/crontab -u ${CUSTOM_USER_NAME} /root/custom_crontab
 
+RUN pecl install xdebug-2.4.1
+RUN docker-php-ext-enable xdebug
+
+COPY ../src/conf/docker-php-entrypoint /usr/bin/docker-php-entrypoint
+RUN chmod +x /usr/bin/docker-php-entrypoint
+
 ENTRYPOINT []
 CMD ["/usr/bin/supervisord"]
