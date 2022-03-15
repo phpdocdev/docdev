@@ -31,3 +31,6 @@ RUN chown ${CUSTOM_USER_NAME}:${CUSTOM_USER_NAME} /etc/supervisor/supervisord.pi
 # Copy and enable CRON/s
 COPY ./${PHPV}/Dockerfile ./${PHPV}/custom_crontab* /root/
 RUN /usr/bin/crontab -u ${CUSTOM_USER_NAME} /root/custom_crontab
+
+COPY ./src/conf/php/. /web/php/
+COPY ./src/conf/aes_payment.txt /etc/aes_payment.txt

@@ -43,7 +43,6 @@
 /**
  * PEAR database abstraction
  */
-
 require_once 'MDB2.php' ;
 
 /**
@@ -579,11 +578,10 @@ function isValidURL($string){
  * @return bool  Is this valid or not?
  */
 function isValidEmail($string){
-    if (preg_match('/[\w]+@[\w]+.[\w]{2,4}/', $string)) {
-        return true ;
-    } else {
-        return false ;
-    }
+	if (function_exists('filter_var')) {
+		return filter_var($string, FILTER_VALIDATE_EMAIL);
+	}
+	return 1 === preg_match('/\\A(?:^([a-z0-9][a-z0-9_\\-\\.\\+]*)@([a-z0-9][a-z0-9\\.\\-]{0,63}\\.(com|org|net|biz|info|name|net|pro|aero|coop|museum|[a-z]{2,}))$)\\z/i', $string);
 }
 
 /**
@@ -634,12 +632,12 @@ function isValidTime($time, $format='g:i a', $badtime=false){
 	if ($time == '00:00:00'){
 		return $badtime ;
 	}
-
+	
 	// Format for saving to mysql
 	if ($format == 'mysql'){
 		$format = 'H:i:s' ;
 	}
-
+	
 	// First, remove anything that doesn't belong in a time field
 	$time = preg_replace('/[^pm 0-9\:]/i', '', $time) ;
 
@@ -651,7 +649,7 @@ function isValidTime($time, $format='g:i a', $badtime=false){
 	}else{
 		// Valid, separate time components (hour, minute, am/pm)
 		list($allmatches, $h, $m, $am_pm) = $matches ;
-
+		
 		// Get rid of $am_pm if 24 hour time.
 		if ($h > 12){
 			$am_pm = '' ;
@@ -695,7 +693,7 @@ function isWholeNumber ($number){
  * When dealing with REALLY BIG NUMBERS, PHP Converts to scientific notation
  * This makes it hard to validate these numbers
  * This function checks to see if the number has been converted
- * to scientific notation - if it has, it divides by 1000 to return a
+ * to scientific notation - if it has, it divides by 1000 to return a 
  * smaller number that can be validated as a number or whole number
  * This allows us to validate numbers as large as 999999999999.49 (Billions)
  */
@@ -848,22 +846,22 @@ function isValidBankRouting( $routing ){
 		// Use the AchPay tool to validate
 		$routing = urlencode($routing) ;
 		$URL = 'https://ach.cdc.nicusa.com/achpay/sendMessage.php?portal_id=4&username=argovt&password=alwaysonmymind&method=verifyRouting&cust_routing_num='.$routing;
-
+	
 		$ch = curl_init();
-
+	
 		curl_setopt($ch, CURLOPT_URL,$URL);
 		curl_setopt($ch, CURLOPT_FOLLOWLOCATION,1);
-		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1); 
 		curl_setopt($ch, CURLOPT_HEADER, 0);
 		curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE);
-
+	
 		$data = curl_exec($ch);
-
+	
 		$error = curl_error($ch);
-
+	
 		//invalidRouting=The+routing+number+xx+is+not+valid.&method=verifyRouting&status=failure
 		//method=verifyRouting&status=success
-
+	
 		if( strpos($data, 'status=success') ){
 			return true;
 		}else{
@@ -951,13 +949,13 @@ function curdate($dateformat='m'){
  * @return array Warnings
  */
 function warn($message = NULL, $fieldname = NULL){
-
+	
 	// Save error field names in global context
 	if ($fieldname){
 		GLOBAL $_errorfields ;
 		$_errorfields[] = $fieldname ;
 	}
-
+	
 	if (!isset($_SESSION['warnings'])){
 		$_SESSION['warnings'] = array() ;
 	}
@@ -1016,7 +1014,7 @@ function show_jquery_warnings($extra_class = 'ui-state-error ui-corner-all'){
 
 	if (is_array($warnings) && sizeof($warnings) > 0){
 		echo '<div id="warnings" class="warn ' . $extra_class . '">' ;
-		echo '<p><span style="float: left; margin-right: 0.3em;" class="ui-icon ui-icon-alert"></span>
+		echo '<p><span style="float: left; margin-right: 0.3em;" class="ui-icon ui-icon-alert"></span> 
 					<strong>Alert:</strong>';
 		echo '<ul>' ;
 		foreach($warnings as $message){
@@ -1129,7 +1127,7 @@ function validate($data, $rules) {
 				$errors[$field][] = "{$label} is not the correct format, please try again.";
 			}
 		}
-
+		
 		if ($r['min'] && (strlen($data[$field]) < $r['min']))
 			$errors[$field][] = "{$label} should be at least {$r['min']} character" . ($r['min'] == 1 ? '' : 's') . ", please try again.";
 
@@ -1165,7 +1163,7 @@ function validate($data, $rules) {
 				$errors[$field][] = "{$label} must be a number between {$r['range']['min']} and {$r['range']['max']}.";
 			}
 		}
-
+		
 		if ($r['wholenumber'] == true && $data[$field] && !isWholeNumber($data[$field]))
 			$errors[$field][] = "{$label} is not a valid whole number.";
 
@@ -1178,7 +1176,7 @@ function validate($data, $rules) {
 		if ($r['url'] == true && $data[$field] && !isValidURL($data[$field]))
 				$errors[$field][] = "{$label} is not a valid URL.";
 
-		if ($r['email'] == true && $data[$field] && !preg_match('/\\A(?:^([a-z0-9][a-z0-9_\\-\\.\\+]*)@([a-z0-9][a-z0-9\\.\\-]{0,63}\\.(com|org|net|biz|info|name|net|pro|aero|coop|museum|[a-z]{2,4}))$)\\z/i', $data[$field]))
+		if ($r['email'] == true && $data[$field] && !isValidEmail($data[$field]))
 			$errors[$field][] = "{$label} is not a valid email address.";
 
 		if ($r['bankrouting'] == true && $data[$field] && !isValidBankRouting($data[$field]))
@@ -1242,7 +1240,7 @@ function get_id_from_name($name, $value = null){
 	if (strstr($name, '[')){
 		$id = str_replace(array('[]', '][', '[', ']'), array((($value != null) ? '_'.$value : ''), '_', '_', ''), $name);
 	}
-
+	
 	return $id;
 }
 */
@@ -1255,13 +1253,13 @@ function get_id_from_name($name, $value = null){
 	}else{
 		$id = $name ;
 	}
-
+	
 	if (strstr($id, '[')){
 		$id = str_replace(array('[]', '][', '[', ']'), array((($value != null) ? '_'.$value : ''), '_', '_', ''), $id);
 	}
 
 
-
+	
 	return $id;
 }
 
@@ -1312,7 +1310,7 @@ function makeHidden($name, $value=''){
 	if (!$id){
 		$id = get_id_from_name($name) ;
 	}
-
+	
 	if (html_entity_decode($value, ENT_QUOTES) == $value){
 		$value = htmlentities($value, ENT_COMPAT, 'ISO-8859-1') ;
 	}
@@ -1344,7 +1342,7 @@ function makeText($name, $value='', $size=false, $max='100', $validate=false, $e
 	if (!$id){
 		$id = get_id_from_name($name) ;
 	}
-
+	
 	if (html_entity_decode($value, ENT_QUOTES) == $value){
 		$value = htmlentities($value, ENT_COMPAT, 'ISO-8859-1') ;
 	}
@@ -1384,7 +1382,7 @@ function makeTextArea($name, $value='', $rows='5', $cols='50') {
 	if (!$id){
 		$id = get_id_from_name($name) ;
 	}
-
+	
 	if (html_entity_decode($value, ENT_QUOTES) == $value){
 		$value = htmlentities($value, ENT_COMPAT, 'ISO-8859-1') ;
 	}
@@ -1463,15 +1461,15 @@ function makeCheckbox($name, $values=array(), $current=array(), $js=array()){
 	}
 
 	$i=1 ;
-
+	
 	$js_event = '';
-
+	
 	if($js){
 		foreach($js as $k=>$v){
 			$js_event .= "$k = \"$v\"";
 		}
 	}
-
+	
 	foreach($values as $value=>$label){
 
 		$id = get_id_from_name($name, $i) ;
@@ -1522,115 +1520,6 @@ function makeRadio($name, $values=array(), $current='', $divider=''){
 	}
 
 	return $ret ;
-}
-
-/**
- * Creates an HTML select (drop down box) with AR counties
- * @param mixed $name Name of element
- * @param mixed $current Pre-selected value
- * @param mixed $id ID of element
- * @param mixed $js Javascript.  Example $js="onClick='return validate()'"
- * @return string Finished html of form element.
- */
-
-function ninjaSelectCounty($name, $value=false, $id=false, $js=false, $title=false){
-	$counties = array(
-		"Arkansas",
-		"Ashley",
-		"Baxter",
-		"Benton",
-		"Boone",
-		"Bradley",
-		"Calhoun",
-		"Carroll",
-		"Chicot",
-		"Clark",
-		"Clay",
-		"Cleburne",
-		"Cleveland",
-		"Columbia",
-		"Conway",
-		"Craighead",
-		"Crawford",
-		"Crittenden",
-		"Cross",
-		"Dallas",
-		"Desha",
-		"Drew",
-		"Faulkner",
-		"Franklin",
-		"Fulton",
-		"Garland",
-		"Grant",
-		"Greene",
-		"Hempstead",
-		"Hot Spring",
-		"Howard",
-		"Independence",
-		"Izard",
-		"Jackson",
-		"Jefferson",
-		"Johnson",
-		"Lafayette",
-		"Lawrence",
-		"Lee",
-		"Lincoln",
-		"Little River",
-		"Logan",
-		"Lonoke",
-		"Madison",
-		"Marion",
-		"Miller",
-		"Mississippi",
-		"Monroe",
-		"Montgomery",
-		"Nevada",
-		"Newton",
-		"Ouachita",
-		"Perry",
-		"Phillips",
-		"Pike",
-		"Poinsett",
-		"Polk",
-		"Pope",
-		"Prairie",
-		"Pulaski",
-		"Randolph",
-		"Saline",
-		"Scott",
-		"Searcy",
-		"Sebastian",
-		"Sevier",
-		"Sharp",
-		"St. Francis",
-		"Stone",
-		"Union",
-		"Van Buren",
-		"Washington",
-		"White",
-		"Woodruff",
-		"Yell"
-	);
-
-	if (!$id){
-		$id = get_id_from_name($name) ;
-	}
-
-	if (!$title){
-		$title = 'Choose' ;
-	}
-	?>
-		<select name="<?=$name?>" id="<?=$id?>" <?=($js ? $js : '' )?>>
-			<option value="" <?=(!$value) ? 'selected="selected" ' : ''?>><?=$title?></option>
-			<?
-				foreach($counties as $a){
-					?>
-						<option value="<?=$a?>" <?=($a==$value)?'selected="selected"':''?>><?=$a?></option>
-					<?
-				}
-			?>
-		</select>
-	<?
 }
 
 /**
@@ -1699,7 +1588,7 @@ function selectState($name, $value=false, $id=false, $js=false, $title=false){
 	if (!$id){
 		$id = get_id_from_name($name) ;
 	}
-
+	
 	if (!$title){
 		$title = 'Choose' ;
 	}
@@ -1739,7 +1628,7 @@ function timeSelect($name='time', $default='8:00 AM'){
 	if (!$id){
 		$id = get_id_from_name($name) ;
 	}
-
+	
 	echo "<select id=\"$id\" name=\"$name\" >" ;
 
 	foreach ($hours as $hour){
@@ -2018,29 +1907,31 @@ class PortalAuth{
 		$this->connect() ;
 
 		$filter = "(uid=$uid)";
-
+		
 		$sr = ldap_search($this->ds, $this->ldap_rootdn, $filter);
 		$entry = ldap_first_entry($this->ds, $sr);
-		$udn = ldap_get_dn($this->ds,$entry);
-
+		$udn = ldap_get_dn($this->ds,$entry); 
+		
 		$filter = "(&(objectclass=groupofuniquenames)(uniquemember=$udn))";
 		$sr = ldap_search($this->ds, $this->ldap_rootdn, $filter, array('cn')); //, 200, 30);
 		$info = ldap_get_entries($this->ds, $sr);
 
 		$Groups = array();
 		for( $i=0; $i<$info['count']; $i++ ){
-			$Groups[$info[$i]['cn'][0]] = $info[$i]['dn'];
+			$Groups[$info[$i]['cn'][0]] = $info[$i]['dn']; 
 		}
 
 		return $Groups ;
 	}
-
+	
 	function validate($uid, $pass, $group=''){
 		$this->connect();
 		$dn = $this->ldap_rootdn;
 
 		// todo check password_needchange on login?
-        $pass = trim($pass);
+
+		# Trim the password to avoid null-byte in PHP < 5.4.28
+		$pass = trim($pass);
 
 		if(!$uid || !$pass){
 			return 'No user name or password supplied';
@@ -2272,21 +2163,21 @@ class GovPaySession{
 	 * INA's secure hash.
 	 */
 	var $affiliateHashId     =  '';
-
+	
 	/**
 	 *
 	 */
 	var $sessionId     		=  '';
-
+	
 	/**
 	 * Required. Amount of transaction.
 	 */
-	var $amount        		=  '';
-
+	var $amount        		=  ''; 
+	
 	/**
 	 * Optional. Passed to payment processor as an Appid parameter.
 	 */
-	var $appId         		=  '';
+	var $appId         		=  ''; 
 
 	/**
 	 * Optional. Used to omit the first page - pay method selection.
@@ -2294,17 +2185,17 @@ class GovPaySession{
      *           or '!c', '!e', '!s' if you want to exclude a given payment method.
      */
 	var $payBy         		=  '';
-
+	
 	/**
 	 * Optional. Used to go back to the originating application.
 	 */
 	var $backUrl       		=  '';
-
+	
 	/**
 	 * Used to override the default "Exit" button text on receipt page, works both for back_url and exit_url.
 	 */
 	var $backUrlText   		=  '';
-
+	
 	/**
 	 * Services's own unique id number
 	 * Usually used to identify session in the calling
@@ -2312,19 +2203,19 @@ class GovPaySession{
 	 * receipt screen
 	 */
 	var $outerUniqueId 		=  '';
-
+	
 	/**
 	 * Required. Example: renewals.
 	 */
-	var $serviceId     		=  '';
+	var $serviceId     		=  ''; 
 	var $text          		=  '';
 	var $transnum      		=  '';
-
+	
 	/**
 	 * Required. Example: arkbar.
 	 */
 	var $vendorId      		=  '';
-
+	
 } // End GovPay Session Object
 
 /**
@@ -2432,19 +2323,19 @@ class ninja{
 	 * @see GovPayInit
 	 */
 	var $GPCSessionService ;
-
+	
 	/**
 	 * URL Of Gov Pay screens
 	 * @see GovPayInit
 	 */
 	var $GovPayURL ;
-
+	
 	/**
 	 * Database Handle for GovPay Database.
 	 * @see GovPayInit
 	 */
 	var $GovPayDB ;
-
+	
 	/**
 	 * What kind of authentication: LDAP, DATABASE, SIMPLE
 	 */
@@ -2466,7 +2357,7 @@ class ninja{
 	 * Password for SIMPLE auth method
 	 */
 	var $auth_pass ;
-
+	
 	/**
 	 * Constructor class.
 	 * Sets some defaults for class variables and starts the application.
@@ -2558,7 +2449,7 @@ class ninja{
 				}
 			}
 		}
-
+		
 		$this->begin_session() ;
 
 		# Globally safe methods.
@@ -2570,16 +2461,16 @@ class ninja{
 			$this->db = false ;
 			$this->db = $this->dbConnect($this->dsn) ;
 		}
-
+		
 		// See if a beforeAction() method has been defined in child class; if so - do it.
 		if (method_exists($this, '_beforeAction')){
 			call_user_func(array($this,'_beforeAction')) ;
 		}
-
+		
 		# Get page action.
 		$this->getDirective() ;
 	}
-
+	
 	/**
 	 * Connect to a database using MDB2
 	 *
@@ -2631,7 +2522,7 @@ class ninja{
 	 *
 	 * Update: Some times you want to use variables in a the view unescaped.
 	 * In my mind, using html_entity_decode() in a view violates the MVC model.
-	 *
+	 * 
 	 * Therefore, I've added a feature that allows you to put variables
 	 * in $output['vars_noescape'] array instead of $output['vars'] before calling showPage()
 	 *
@@ -2648,12 +2539,12 @@ class ninja{
 	 *	 </code>
 	 */
     function showPage($output=array(), $blank=false, $return=false){
-        if($blank){
+        if($blank){        	
             $skin_array = split(':', $this->skin_dsn);
             unset($skin_array[count($skin_array) - 1]);
             $this->skin_dsn = join(':', $skin_array) . ':blank';
         }
-
+        
         if (!is_array($output)){
 			$content = $output ;
 			$output = array('content'=>$content) ;
@@ -2685,7 +2576,7 @@ class ninja{
 		/**
 		 * Allow developers to define a method to populate extra template variables
 		 * Method should return an associative array of variable name=>value
-		 *
+		 * 
 		 * Example:
 		 * function get_template_vars(){
 		 * 		return array('pagetitle'=>'Login', 'pageheader'=>'Please Login') ;
@@ -2697,7 +2588,7 @@ class ninja{
 				$output['vars'][$k] = $v ;
 			}
 		}
-
+		
 		/* Outer Template */
 		$layout = new Template($this->skin_dsn) ;
 		$layout->set('image_path', $this->image_path) ;
@@ -2752,14 +2643,14 @@ class ninja{
 			# Insert cross site request forgery protection into all forms.
 			$hidden_token = "\n" . $this->security->insert_csrf_string_hidden() ;
 			$final = preg_replace("/(<form.*>)/i", "$1$hidden_token\n", $final) ;
-
+	
 			# Insert cross site request forgery protection into app links.
 			$token = $this->security->insert_csrf_string_get();
 			#$final = preg_replace('/index.php\?*/', "index.php?$token&", $final);
 			$final = preg_replace('/\?do:{1}/', "?$token&do:", $final);
 			$final = preg_replace('/csrf_token/', $token, $final) ;
 		}
-
+		
 		if ($return){
 			return $final ;
 		}else{
@@ -2780,10 +2671,12 @@ class ninja{
 	 * @return void
 	 */
 	function _forward($url, $warning = false){
-        // Fix for "Too many redirects" bug in safari
-        if (preg_match('/^\?/', $url)){
-            $url = $_SERVER['SCRIPT_NAME'] . $url;
-        }
+		// Fix for "Too many redirects" bug in safari
+		if (preg_match('/^\?/', $url)){
+			$urlparts = explode('/', $_SERVER['PHP_SELF']) ;
+			$self = $urlparts[count($urlparts)-1] ;
+			$url = $self . $url ;
+		}
 
 		$url = $this->_appLink($url) ;
 
@@ -2816,7 +2709,7 @@ class ninja{
 
 		$this->showPage($output) ;
 	}
-
+	
 	/**
 	 * Append CSRF string to a link prior to _forward() ;
 	 */
@@ -2926,7 +2819,6 @@ class ninja{
 			echo "<pre>$message</pre>" ;
 		}
 
-			//echo "<pre>$message</pre>" ;
 		if ($die){
 			die ("<p>An error occurred, and the Administrator has been notified.  Please try again later.</p>") ;
 		}
@@ -2950,11 +2842,10 @@ class ninja{
 		if (function_exists('db_sess_start')){// Check to see if we using our custom session save handler?
 			session_set_save_handler('db_sess_start', 'db_sess_end', 'db_sess_read', 'db_sess_write', 'db_sess_destroy', 'db_sess_gc');
 		}
-
+		
 		session_cache_limiter('none') ;
 		session_name($this->app_session_name) ;
 		session_start() ;
-		//printf("N: Start: %s<br>", session_id());
 
 		if (count($_GET) > 0 || count($_POST) > 0){
 
@@ -3001,7 +2892,7 @@ class ninja{
 		$_REQUEST = False ;
 		session_destroy() ;
 	}
-
+	
 	/**
 	 * Initialize a GovPay Object.
 	 * - Returns govpay object
@@ -3013,7 +2904,7 @@ class ninja{
 	 * Usage:
 	 *
 	 *<code>
-	 * $govpayobj = $this->GovPayInit() ;
+	 * $govpayobj = $this->GovPayInit() ; 
 	 * try {
 	 * 		$govpayobj->amount 			= $amount ;
 	 * 		$govpayobj->appId  			= $this->app_id ; // Defined in conf.properties
@@ -3023,7 +2914,7 @@ class ninja{
 	 * 		$govpayobj->text			= $this->text ;
 	 * 		$govpayobj->transnum		= $transnum ;
 	 * 		$govpayobj->vendorID		= $this->vendor_id ; // Defined in conf.properties
-	 *
+	 * 
 	 * 		$client = new SoapClient($this->GPCSessionService, array('trace'=>1)) ;
 	 * 		$r = $client->getSesssionId($govpayobj) ;
 	 *		// Redirect user to govpay using $r->sessionNumber and $this->GovPayURL
@@ -3037,23 +2928,17 @@ class ninja{
 	function GovPayInit(){
 		$govpaysession = new GovPaySession() ;
 		$govpaysession->affiliateHashId = '2382938749283749' ;
-
+		
 		switch (strtolower($this->app_mode)){
 			case 'prod':
 				$this->GPCSessionService = 'https://www.ark.org/govpay/service/Session?WSDL' ;
 				$this->GovPayURL = 'https://www.ark.org/govpay/app' ;
-				$GovPayDSN = 'mysql://govpay@proddb.ark.org/ina_govpay_collector' ;
 				break ;
 			default:
-				$this->GPCSessionService = 'http://dev.ark.org/govpay/service/Session?WSDL' ;
-				$this->GovPayURL = 'https://dev.ark.org/govpay/app' ;
-				//$this->GovPayDSN = 'mysql://govpay@db.dev.ark.org/ina_govpay_collector' ;
-				$this->GovPayDSN = 'mysql://govpay@testdb.ark.org/ina_govpay_collector' ;
+				$this->GPCSessionService = 'http://devweb.ark.org/govpay/service/Session?WSDL' ;
+				$this->GovPayURL = 'https://devweb.ark.org/govpay/app' ;
 				break ;
 		}
-
-		// I don't think we really want to connect to the gov pay database.  It's enough to return the dsn.
-		//$this->GovPayDB = $this->dbConnect($GovPayDSN) ;
 
 		return $govpaysession ;
 	}
@@ -3071,7 +2956,7 @@ class ninja{
 	* 	parent::ninja($params) ;
 	* }
 	* </code>
-	*
+	* 
 	* @param void
 	* @return array Array of class methods considered safe.
 	* @see _defineSafeMethodsFilter
@@ -3085,7 +2970,7 @@ class ninja{
 		$l = array_filter($localMethods, array($this, '_defineSafeMethodsFilter'));
 		return $l;
 	}
-
+	
 	/**
 	 * Filter for method names not starting with an underscore.
 	 *
@@ -3121,8 +3006,8 @@ class ninja{
 		if ($this->secure_image_path){
 			$this->image_path = $this->secure_image_path ;
 		}
-
-
+		
+		
 		# Defend against session hijacking.
 		if (!$this->security->is_valid_hijack_string()){
 				$this->security->security_log(__FILE__, __LINE__,
@@ -3132,7 +3017,7 @@ class ninja{
 				$_SERVER['HTTP_ACCEPT_CHARSET']));
 				die("Security check failed");
 		}
-
+		
 		if ($_SESSION['valid_user']){
 			return true ; // Already logged in.
 		}elseif (isset($_POST['un'])){
@@ -3226,7 +3111,7 @@ class ninja{
 		if (!$valid_auth && $this->auth_method == 'AGENCYAD' && in_array ( 'staff', $groups)){
 			list($valid_auth, $msg, $group) = $this->_auth_ldap($_POST['un'], $_POST['pw'], array('staff')) ;
 		}
-
+		
 		if (!$valid_auth){
 			return false ;
 		}else{
@@ -3246,11 +3131,11 @@ class ninja{
 	 */
 	function _auth_agencyad($un, $pw, $group=false){
 		require_once 'ninja_auth_ad.php' ;
-
+		
 		if (!$un || ! $pw){
 			return false ;
 		}
-
+	
 		$ADinfo = array('account_suffix' 	 => '@agencyad.ark.org',
 						'base_dn'		 	 => 'DC=agencyad,DC=ark,DC=org',
 						'domain_controllers' => array('agencydc01.agencyad.ark.org'),
@@ -3259,16 +3144,16 @@ class ninja{
 					);
 
 		$AD=new adLDAP($ADinfo);
-
+		
 		// First, validate user/pass.
 		$valid_pass = $AD->authenticate($un, $pw);
-
+		
 		if (!$valid_pass){
 			// Invalid username/password
 			return array(false, 'Login Failed', false) ;
 		}else{
 			// User + Pass ok, check group.
-
+			
 			if (!$group){
 				// No groups defined.  Just authenticate.
 				return array(true, 'Success', false) ;
@@ -3276,26 +3161,26 @@ class ninja{
 				if (is_array($group)){
 					// Check multiple groups. Return true on first match.
 					foreach($group as $g){
-						$valid_group = $AD->user_ingroup($un, $g) ;
-
+						$valid_group = $AD->user_ingroup($un, $g) ; 
+	
 						if ($valid_group){
-							return array(true, 'Success', $g) ;
+							return array(true, 'Success', $g) ; 
 						}
 					}
 				}else{
 					// Checking a single group.
-					$valid_group = $AD->user_ingroup($un, $group) ;
+					$valid_group = $AD->user_ingroup($un, $group) ; 
 					if ($valid_group){
-						return array(true, 'Success', $group) ;
+						return array(true, 'Success', $group) ; 
 					}
 				}
-
+				
 				// Unable to authorize with any of the specified groups.
-				return array(false, 'Login Failed', false) ;
+				return array(false, 'Login Failed', false) ; 
 			}
 		}
 	}
-
+	
 	/**
 	 * Authenticates from INA's LDAP Server.
 	 * @param string $un Username
@@ -3314,7 +3199,6 @@ class ninja{
 			foreach($group as $g){
 				$g = trim($g) ; // Trim any spaces from group.
 				list($valid, $message) = $LDAP->verify($un, $pw, $g) ; // Test each group.
-
 				if ($valid){
 					return array($valid, $message, $g) ; // Success!
 				}

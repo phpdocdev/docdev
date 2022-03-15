@@ -243,7 +243,10 @@ func GenerateHosts(c *cli.Context) error {
 }
 
 func StartContainer(c *cli.Context) error {
-	startCmd := `docker-compose up --force-recreate --build -V -d`
+	downCmd := `docker-compose down`
+	exec.Command("bash", "-c", downCmd).Output()
+
+	startCmd := `docker-compose up --build -V -d`
 	start := exec.Command("bash", "-c", startCmd)
 
 	fmt.Printf("%v\n", start)
@@ -309,6 +312,14 @@ func ExecContainer(c *cli.Context) error {
 func ChangePhpVersion(c *cli.Context) error {
 	err := setEnvFileValue("PHPV", c.Args().First())
 
+	if c.Bool("start") {
+		fmt.Printf("%s", "Starting containers...\n")
+		err = StartContainer(c)
+		if err != nil {
+			return cli.Exit(err, 86)
+		}
+	}
+
 	return err
 }
 
@@ -347,6 +358,14 @@ func setEnvFileValue(key string, value string) error {
 
 	myEnv[key] = value
 	err = godotenv.Write(myEnv, "./.env")
+	if err != nil {
+		log.Fatal("Error writing .env file")
+	}
+
+	err = godotenv.Overload("./.env")
+	if err != nil {
+		log.Fatal("Error loading .env file")
+	}
 
 	return err
 }
