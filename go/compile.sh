@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-package_name="docdev"
+package_name=$(go list)
 
 #the full list of the platforms: https://golang.org/doc/install/source#environment
 platforms=(

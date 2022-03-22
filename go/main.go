@@ -2,9 +2,11 @@ package main
 
 import (
 	"fmt"
+	"io/ioutil"
 	"log"
 	"os"
 	"os/exec"
+	"regexp"
 	"strings"
 
 	"github.com/joho/godotenv"
@@ -27,7 +29,6 @@ func main() {
 	}
 
 	app := &cli.App{
-
 		Flags: flags,
 		Commands: []*cli.Command{
 			{
@@ -169,7 +170,6 @@ func Init(c *cli.Context) error {
 }
 
 func GenerateCerts(c *cli.Context) error {
-
 	names := getProjectHosts()
 
 	mkCertCmd := "mkcert -cert-file cert/nginx.pem -key-file cert/nginx.key localhost 127.0.0.1 ::1 " + names
@@ -197,7 +197,6 @@ func GenerateCerts(c *cli.Context) error {
 }
 
 func GenerateHosts(c *cli.Context) error {
-
 	hostctl, err := exec.Command("which", "hostctl").Output()
 	if string(hostctl[:]) == "" {
 		_, err = exec.Command("brew", "install", "hostctl").Output()
@@ -319,6 +318,33 @@ func ChangePhpVersion(c *cli.Context) error {
 			return cli.Exit(err, 86)
 		}
 	}
+
+	// Update the DOCDEV_PHP env for use for other applications
+	envVal := "php" + c.Args().First()
+	profileLocation := os.Getenv("HOME") + "/.zshrc"
+	if _, err := os.Stat(profileLocation); os.IsNotExist(err) {
+		profileLocation = os.Getenv("HOME") + "/.bashrc"
+	}
+
+	dat, _ := os.ReadFile(profileLocation)
+	split := strings.Split(string(dat), "\n")
+
+	var found bool = false
+	for idx, line := range split {
+		if strings.HasPrefix(line, "export DOCDEV_PHP") {
+			found = true
+			re := regexp.MustCompile(`=.*`)
+			fix := re.ReplaceAllString(line, "="+envVal)
+			split[idx] = fix
+
+		}
+	}
+
+	if !found {
+		split = append(split, "export DOCDEV_PHP="+envVal)
+	}
+
+	err = ioutil.WriteFile(profileLocation, []byte(strings.Join(split, "\n")), 0)
 
 	return err
 }
