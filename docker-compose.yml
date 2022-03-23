@@ -101,3 +101,16 @@ services:
     networks:
       lde-network:
         ipv4_address: 192.168.103.106
+  mailhog:
+    container_name: mailhog
+    hostname: mailhog
+    build:
+      context: ./mailhog
+      dockerfile: ./Dockerfile
+    # volumes:
+      # - ./mailhog:/root/gocode
+    ports:
+      - "${LOCAL_LISTEN_ADDR}${HOST_PORT_MAILHOG:-8025}:8025"
+    networks:
+      lde-network:
+        ipv4_address: 192.168.103.108
