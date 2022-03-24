@@ -1,5 +1,5 @@
 # syntax = edrevo/dockerfile-plus
-FROM php:7.4-fpm
+FROM php:7.2-fpm
 
 ENV PATH /usr/local/go/bin:/root/.composer/vendor/bin:$PATH
 
@@ -37,7 +37,7 @@ RUN apt update && apt install -y --no-install-recommends \
   && rm -rf /var/lib/apt/lists/*
 
 # Configure GD Library
-RUN docker-php-ext-configure gd --with-freetype --with-jpeg --with-webp \
+RUN docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/ --with-webp-dir=/usr/include/ \
   && docker-php-ext-install -j$(nproc) gd
 
 # Install Composer
@@ -77,7 +77,7 @@ ADD https://github.com/mlocati/docker-php-extension-installer/releases/latest/do
 RUN chmod +x /usr/local/bin/install-php-extensions && sync && \
     install-php-extensions ldap ioncube_loader
 
-ARG PHPV=74
+ARG PHPV=72
 INCLUDE+ ./src/common/shell.Dockerfile
 
 ENTRYPOINT []

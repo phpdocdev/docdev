@@ -1,3 +1,4 @@
+# syntax = edrevo/dockerfile-plus
 FROM php:5.4-fpm
 
 ENV PATH /usr/local/go/bin:/root/.composer/vendor/bin:$PATH
@@ -54,6 +55,20 @@ RUN touch /etc/supervisor/supervisord.pid
 
 RUN pecl install xdebug-2.4.1
 RUN docker-php-ext-enable xdebug
+
+RUN apt install libldb-dev libldap2-dev -y \
+    && ln -fs /usr/lib/x86_64-linux-gnu/libldap.so /usr/lib/ \
+    && docker-php-ext-install ldap \
+    && docker-php-ext-enable ldap
+
+RUN curl -o ioncube.tar.gz http://downloads3.ioncube.com/loader_downloads/ioncube_loaders_lin_x86-64.tar.gz \
+    && tar -xvvzf ioncube.tar.gz \
+    && mv ioncube/ioncube_loader_lin_$(php -r 'echo PHP_MAJOR_VERSION . "." . PHP_MINOR_VERSION;').so `php-config --extension-dir` \
+    && rm -Rf ioncube.tar.gz ioncube \
+    && docker-php-ext-enable ioncube_loader_lin_$(php -r 'echo PHP_MAJOR_VERSION . "." . PHP_MINOR_VERSION;')
+
+ARG PHPV=54
+INCLUDE+ ./src/common/shell.Dockerfile
 
 ENTRYPOINT []
 CMD ["/usr/bin/supervisord"]

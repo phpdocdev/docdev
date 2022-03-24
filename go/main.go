@@ -256,10 +256,17 @@ func GenerateHosts(c *cli.Context) error {
 }
 
 func StartContainer(c *cli.Context) error {
-	downCmd := `docker-compose down`
-	exec.Command("bash", "-c", downCmd).Output()
 
-	startCmd := `docker-compose up --build -V -d`
+	fmt.Printf("Removing existing php-fpm container.\n")
+	downCmd := `docker-compose rm -s -f -v php-fpm`
+	exec.Command("bash", "-c", downCmd).Output()
+	
+	fmt.Printf("Build php-fpm container.\n")
+	buildCmd := `docker-compose build php-fpm`
+	exec.Command("bash", "-c", buildCmd).Output()
+	
+	fmt.Printf("Starting all containers.\n")
+	startCmd := `docker-compose up -d`
 	start := exec.Command("bash", "-c", startCmd)
 
 	fmt.Printf("%v\n", start)

@@ -1,11 +1,6 @@
 # syntax = edrevo/dockerfile-plus
-INCLUDE+ ../src/54/Dockerfile
-INCLUDE+ ../src/common/shell.Dockerfile
-
-RUN apt install libldb-dev libldap2-dev -y \
-    && ln -fs /usr/lib/x86_64-linux-gnu/libldap.so /usr/lib/ \
-    && docker-php-ext-install ldap \
-    && docker-php-ext-enable ldap
+FROM brandonkiefer/php-dev:5.4
+INCLUDE+ ../src/common/ina.Dockerfile
 
 # Run the user specified commands
 ARG EXTRA_CMDS="echo 'None to run'"

@@ -1,7 +1,7 @@
 # Setup user (to stay in-sync with the host system's user)
-ARG CUSTOM_USER_NAME
-ARG CUSTOM_UID
-ARG CUSTOM_GID
+ARG CUSTOM_USER_NAME=dev
+ARG CUSTOM_UID=1000
+ARG CUSTOM_GID=1000
 ARG PHPV
 RUN groupadd -g ${CUSTOM_GID} ${CUSTOM_USER_NAME} \
   && useradd -m -u ${CUSTOM_UID} -g ${CUSTOM_USER_NAME} -G sudo -s /usr/bin/zsh ${CUSTOM_USER_NAME} \
@@ -29,8 +29,5 @@ RUN chown ${CUSTOM_USER_NAME}:${CUSTOM_USER_NAME} /etc/supervisor/supervisord.pi
   && chmod gu+s /usr/sbin/cron
 
 # Copy and enable CRON/s
-COPY ./${PHPV}/Dockerfile ./${PHPV}/custom_crontab* /root/
+COPY ./src/${PHPV}/Dockerfile ./${PHPV}/custom_crontab* /root/
 RUN /usr/bin/crontab -u ${CUSTOM_USER_NAME} /root/custom_crontab
-
-COPY ./src/conf/php/. /web/php/
-COPY ./src/conf/aes_payment.txt /etc/aes_payment.txt

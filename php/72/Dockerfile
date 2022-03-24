@@ -1,5 +1,5 @@
 # syntax = edrevo/dockerfile-plus
-FROM brandonkiefer/php-dev:7.4
+FROM brandonkiefer/php-dev:7.2
 INCLUDE+ ../src/common/ina.Dockerfile
 
 # Run the user specified commands

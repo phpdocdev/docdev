@@ -1,3 +1,4 @@
+# syntax = edrevo/dockerfile-plus
 FROM php:5.6-fpm
 
 ENV PATH /usr/local/go/bin:/root/.composer/vendor/bin:$PATH
@@ -57,6 +58,13 @@ COPY ./src/conf/custom.ini /usr/local/etc/php/conf.d/zza-custom.ini
 # PHP-FPM and CRON supervisord config
 COPY ./src/conf/supervisord.conf /etc/supervisor/supervisord.conf
 RUN touch /etc/supervisor/supervisord.pid
+
+ADD https://github.com/mlocati/docker-php-extension-installer/releases/latest/download/install-php-extensions /usr/local/bin/
+RUN chmod +x /usr/local/bin/install-php-extensions && sync && \
+    install-php-extensions ldap ioncube_loader
+
+ARG PHPV=56
+INCLUDE+ ./src/common/shell.Dockerfile
 
 ENTRYPOINT []
 CMD ["/usr/bin/supervisord"]

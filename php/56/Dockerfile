@@ -1,7 +1,6 @@
 # syntax = edrevo/dockerfile-plus
-INCLUDE+ ../src/56/Dockerfile
-INCLUDE+ ../src/common/ldap.Dockerfile
-INCLUDE+ ../src/common/shell.Dockerfile
+FROM brandonkiefer/php-dev:5.6
+INCLUDE+ ../src/common/ina.Dockerfile
 
 # Run the user specified commands
 ARG EXTRA_CMDS="echo 'None to run'"
