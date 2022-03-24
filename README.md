@@ -35,7 +35,7 @@ Create .env, certificates, and modified hosts file then starts the containers.
 * `--tld loc` will be the TLD for the projects, making them accessible at `https://{project}.loc`
 * `--php 74` is the initial PHP version and may be changed later.
 * `--root /my/project/dir/` should be the parent folder of your git repositories. Any folder located within the root directory will represent a hostname. `/my/project/dir/repo1` will be accessible via `https://repo1.loc`.
-* `--certs` will install `mkcert` and then generate a certificate that includes each hostname in your root project directory. You will need to install the CA (`./cert/rootCA.pem`) to your keychain and explicitly trust it.
+* `--certs` will install `mkcert` and then generate a certificate that includes each hostname in your root project directory. If the root CA is not found in your keychain, it will be added and trusted automatically.
 * `--hosts` will install `hostctl` and generate a new `/etc/host` file with all of your hostnames pointed to your localhost, which will be picked up by bindns. You will need to enter your password to replace your existing host file.
 * `--start` will start the containers after the initialization is complete.
 

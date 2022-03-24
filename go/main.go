@@ -193,6 +193,20 @@ func GenerateCerts(c *cli.Context) error {
 
 	fmt.Printf("%s", "Certifcates have been generated.\n")
 
+	certInstalled, err := exec.Command("security", "find-certificate", "-a", "-c", "mkcert").Output()
+	if err != nil {
+		fmt.Printf("%s", err)
+	}
+
+	if string(certInstalled) == "" {
+		fmt.Printf("Root CA is not installed.\n")
+		_, err := exec.Command("sudo", "security", "add-trusted-cert", "-d", "-r", "trustRoot", "-k", "/Library/Keychains/System.keychain", "./cert/rootCA.pem").Output()
+		if err != nil {
+			fmt.Printf("%s", err)
+		}
+		fmt.Printf("Root CA has been installed.\n")
+	}
+
 	return err
 }
 
