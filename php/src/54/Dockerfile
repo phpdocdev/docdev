@@ -34,20 +34,6 @@ RUN docker-php-ext-enable mcrypt memcached redis
 RUN docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/ --with-vpx-dir=/usr/include/ \
   && docker-php-ext-install gd
 
-# Install Ioncube
-RUN cd /tmp \
-  && curl -o ioncube.tar.gz http://downloads3.ioncube.com/loader_downloads/ioncube_loaders_lin_x86-64.tar.gz \
-  && tar -xvvzf ioncube.tar.gz \
-  && mv ioncube/ioncube_loader_lin_$(php -r 'echo PHP_MAJOR_VERSION . "." . PHP_MINOR_VERSION;').so /usr/local/lib/php/extensions/* \
-  && rm -Rf ioncube.tar.gz ioncube \
-  && echo "zend_extension=ioncube_loader_lin_$(php -r 'echo PHP_MAJOR_VERSION . "." . PHP_MINOR_VERSION;').so" > /usr/local/etc/php/conf.d/00_docker-php-ext-ioncube_loader_lin_$(php -r 'echo PHP_MAJOR_VERSION . "." . PHP_MINOR_VERSION;').ini
-
-# Install Composer
-# RUN apt install -y openssl
-# RUN curl -k --show-error -sS https://getcomposer.org/download/1.10.25/composer.phar | php 
-# RUN mv composer.phar /usr/local/bin/composer \
-#   && composer clear-cache
-
 # Install MailHog
 RUN curl -L -o /usr/bin/mhsendmail https://github.com/mailhog/mhsendmail/releases/download/v0.2.0/mhsendmail_linux_amd64 \
   && chmod +x /usr/bin/mhsendmail
