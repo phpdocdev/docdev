@@ -5,6 +5,7 @@
 `MySQL` and `Redis` are both served from your host machine and are accessible via `mysql` and `redis` hostnames in your application. I reccomend using [DBNgin](https://dbngin.com) to host the services on your host machine.
 
 ## Commands
+
 ```
 NAME: docdev
 
@@ -29,7 +30,14 @@ GLOBAL OPTIONS:
 
 Create .env, certificates, and modified hosts file then starts the containers.
 
-`go run . init --tld loc --php 74 --root /my/projects/dir/ --certs --hosts --start`
+`./docdev init --tld loc --php 74 --root /my/projects/dir/ --certs --hosts --start`
+
+* `--tld loc` will be the TLD for the projects, making them accessible at `https://{project}.loc`
+* `--php 74` is the initial PHP version and may be changed later.
+* `--root /my/project/dir/` should be the parent folder of your git repositories. Any folder located within the root directory will represent a hostname. `/my/project/dir/repo1` will be accessible via `https://repo1.loc`.
+* `--certs` will install `mkcert` and then generate a certificate that includes each hostname in your root project directory. You will need to install the CA (`./cert/rootCA.pem`) to your keychain and explicitly trust it.
+* `--hosts` will install `hostctl` and generate a new `/etc/host` file with all of your hostnames pointed to your localhost, which will be picked up by bindns. You will need to enter your password to replace your existing host file.
+* `--start` will start the containers after the initialization is complete.
 
 ```shell
 USAGE:
@@ -46,43 +54,50 @@ OPTIONS:
    --help, -h              show help (default: false)
 ```
 
-Create SSL certificate and CA
+### Create SSL certificate and CA
 
-`docdev certs`
+`./docdev certs`
 
-Create host file
+### Create host file
+
 > Dry run by appending `-d`
 
-`docdev hosts`
+`./docdev hosts`
 
-Start the containers and install certificates
+### Start the containers and install certificates
 
-`docdev start`
+`./docdev start`
 
-Shell into the php container
+### Shell into the php container
 
-`docdev exec`
+`vdocdev exec`
 
-Change PHP version and start the containers
+### Change PHP version and start the containers
 
-`docdev php -s 74`
+`./docdev php -s 74`
 
 # Usage
+
 ## Environment
 
 ### Automatic
 
-Run `docdev init` with the appropriate options:
+Run `./docdev init` with the appropriate options:
 
 ### Manually
+
 In your `.env` file, modify the value of `DOCUMENTROOT` to the directory containing your repositories. The folder names will represent the hostname to access the specific folder.
+
 ## Routing
 
 ### Automatic
-Run `docdev hosts`
+
+Run `./docdev hosts`
 
 ### Manually
+
 In your `/etc/hosts` file, add `{myproject.loc}     127.0.0.1`
+
 > `myproject` is the folder/project name.
 > You may also want to install this to manage your host records in Mac system preferences: https://github.com/specialunderwear/Hosts.prefpane
 
@@ -94,4 +109,4 @@ Apache is configured to serve from the `public` folder of each project. If you'r
 
 You will access your projects via `https://myproject.loc`
 
-> If you add any new projects, simply run `docdev certs && docdev start` to refresh the pathings.
+> If you add any new projects, simply run `./docdev certs && ./docdev start` to refresh the pathings.
