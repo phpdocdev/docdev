@@ -49,16 +49,6 @@ RUN curl --silent --show-error https://getcomposer.org/installer | php \
 RUN curl -L -o /usr/bin/mhsendmail https://github.com/mailhog/mhsendmail/releases/download/v0.2.0/mhsendmail_linux_amd64 \
   && chmod +x /usr/bin/mhsendmail
 
-# Install Wordpress CLI
-RUN curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar \
-  && chmod +x wp-cli.phar \
-  && mv wp-cli.phar /usr/local/bin/wp
-
-# Install PHPCS
-RUN composer global require squizlabs/php_codesniffer wp-coding-standards/wpcs \
-  && phpcs --config-set installed_paths /root/.composer/vendor/wp-coding-standards/wpcs \
-  && composer clear-cache
-
 # Setup Crons
 RUN touch /root/custom_crontab \
   && /usr/bin/crontab -u www-data /root/custom_crontab

@@ -104,7 +104,7 @@ func main() {
 			{
 				Name:    "php",
 				Aliases: []string{"p"},
-				Usage:   "Change php version (requires \"start\" to rebuild). Valid values: 54, 56, 70, 71, 72, 73, 74",
+				Usage:   "Change php version (requires \"start\" to rebuild). Valid values: 54, 56, 72, 74",
 				Action:  ChangePhpVersion,
 				Flags: []cli.Flag{
 					&cli.BoolFlag{

@@ -18,7 +18,7 @@ COMMANDS:
    hosts     Generate hosts file, backed up and produced at ./host. Will replace your system hostfile.
    start, s  Bring up the docker containers
    exec, e   Start docker container shell
-   php, p    Change php version (requires "start" to rebuild). Valid values: 54, 56, 70, 71, 72, 73, 74
+   php, p    Change php version (requires "start" to rebuild). Valid values: 54, 56, 72, 74
    help, h   Shows a list of commands or help for one command
 
 GLOBAL OPTIONS:

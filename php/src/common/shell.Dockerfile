@@ -27,7 +27,3 @@ RUN ZSH="/home/${CUSTOM_USER_NAME}/.oh-my-zsh" sh -c "$(curl -fsSL https://raw.g
 RUN chown ${CUSTOM_USER_NAME}:${CUSTOM_USER_NAME} /etc/supervisor/supervisord.pid \
   && chmod gu+rw /var/run \
   && chmod gu+s /usr/sbin/cron
-
-# Copy and enable CRON/s
-COPY ./src/${PHPV}/Dockerfile ./${PHPV}/custom_crontab* /root/
-RUN /usr/bin/crontab -u ${CUSTOM_USER_NAME} /root/custom_crontab
