@@ -19,9 +19,7 @@ services:
     container_name: apache
     hostname: apache
     restart: ${DOCKER_RESTART}
-    build:
-      context: ./apache
-      dockerfile: ./Dockerfile
+    image: brandonkiefer/php-dev:apache
     ports:
       - "80:80"
       - "443:443"
@@ -70,9 +68,7 @@ services:
   bind:
     container_name: bind
     hostname: bind
-    build:
-      context: ./bind
-      dockerfile: ./Dockerfile
+    image: brandonkiefer/php-dev:bind
     restart: always
     ports:
       - "${LOCAL_LISTEN_ADDR}${HOST_PORT_BIND:-53}:53/tcp"
@@ -104,11 +100,7 @@ services:
   mailhog:
     container_name: mailhog
     hostname: mailhog
-    build:
-      context: ./mailhog
-      dockerfile: ./Dockerfile
-    # volumes:
-      # - ./mailhog:/root/gocode
+    image: brandonkiefer/php-dev:mailhog
     ports:
       - "${LOCAL_LISTEN_ADDR}${HOST_PORT_MAILHOG:-8025}:8025"
     networks:
