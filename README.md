@@ -29,7 +29,7 @@ USAGE:
 COMMANDS:
    init, i   Initialize configuration and install mkcert
    certs, c  Generate and install the certificates
-   hosts     Generate hosts file, backed up and produced at ./host. Will replace your system hostfile.
+   hosts     Generate a new hosts profile and add it to your system /etc/host
    start, s  Bring up the docker containers
    exec, e   Start docker container shell
    php, p    Change php version (requires "start" to rebuild). Valid values: 54, 56, 72, 74
