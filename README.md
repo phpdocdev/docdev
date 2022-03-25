@@ -1,8 +1,22 @@
 # Getting Started
 
+Source files for Docker images, docdev command, and release strategy: https://github.ark.org/brandon-kiefer/docker-dev-src
+
+Download the latest release: https://github.ark.org/brandon-kiefer/docker-dev/releases
+
 ## Prerequisites
 
 `MySQL` and `Redis` are both served from your host machine and are accessible via `mysql` and `redis` hostnames in your application. I reccomend using [DBNgin](https://dbngin.com) to host the services on your host machine.
+
+## Env
+
+The following environment variables are created and inserted to your .bashrc or .zshrc during `init`.
+
+
+| ENV         | Example               |
+| ------------- | ----------------------- |
+| DOCDEV_PHP  | *74*                  |
+| DOCDEV_PATH | */path/to/docker-dev* |
 
 ## Commands
 
