@@ -24,7 +24,6 @@ services:
       - "80:80"
       - "443:443"
     volumes:
-      - ./apache/sites:/usr/local/apache2/conf/sites:ro
       - ${DOCUMENTROOT}:/var/www/html:delegated
       - ./cert:/etc/ssl/certs
     env_file:
