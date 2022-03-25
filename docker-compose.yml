@@ -70,25 +70,15 @@ services:
     image: brandonkiefer/php-dev:bind
     restart: always
     ports:
-      - "${LOCAL_LISTEN_ADDR}${HOST_PORT_BIND:-53}:53/tcp"
-      - "${LOCAL_LISTEN_ADDR}${HOST_PORT_BIND:-53}:53/udp"
+      - "${HOST_PORT_BIND:-53}:53/tcp"
+      - "${HOST_PORT_BIND:-53}:53/udp"
 
     environment:
       - DEBUG_ENTRYPOINT=${DEBUG_COMPOSE_ENTRYPOINT}
-
       - WILDCARD_DNS=${TLD_SUFFIX:-loc}=${DOCKER_HOST_IP}
       - EXTRA_HOSTS=${EXTRA_HOSTS}
-
       - DNS_FORWARDER=${BIND_DNS_RESOLVER:-9.9.9.9,8.8.4.4}
-
       - DNSSEC_VALIDATE=${BIND_DNSSEC_VALIDATE:-no}
-
-      - TTL_TIME=${BIND_TTL_TIME}
-      - REFRESH_TIME=${BIND_REFRESH_TIME}
-      - RETRY_TIME=${BIND_RETRY_TIME}
-      - EXPIRY_TIME=${BIND_EXPIRY_TIME}
-      - MAX_CACHE_TIME=${BIND_MAX_CACHE_TIME}
-
       - DOCKER_LOGS=${BIND_LOG_DNS_QUERIES-1}
 
     dns:
@@ -101,7 +91,7 @@ services:
     hostname: mailhog
     image: brandonkiefer/php-dev:mailhog
     ports:
-      - "${LOCAL_LISTEN_ADDR}${HOST_PORT_MAILHOG:-8025}:8025"
+      - "${HOST_PORT_MAILHOG:-8025}:8025"
     networks:
       lde-network:
         ipv4_address: 192.168.103.108
