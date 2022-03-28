@@ -10,13 +10,11 @@ Download the latest release: https://github.ark.org/brandon-kiefer/docker-dev/re
 
 ## Env
 
-The following environment variables are created and inserted to your .bashrc or .zshrc during `init`.
 
-
-| ENV         | Example               |
-| ------------- | ----------------------- |
-| DOCDEV_PHP  | *74*                  |
-| DOCDEV_PATH | */path/to/docker-dev* |
+| ENV         | Example               | Required                                  |
+| ------------- | ----------------------- | ------------------------------------------- |
+| DOCDEV_PHP  | *74*                  | Used for shell integrations, not required |
+| DOCDEV_PATH | */path/to/docker-dev* | Required to run the CLI utility           |
 
 ## Commands
 
@@ -27,13 +25,17 @@ USAGE:
    docdev [global options] command [command options] [arguments...]
 
 COMMANDS:
-   init, i   Initialize configuration and install mkcert
-   certs, c  Generate and install the certificates
-   hosts     Generate a new hosts profile and add it to your system /etc/host
-   start, s  Bring up the docker containers
-   exec, e   Start docker container shell
-   php, p    Change php version (requires "start" to rebuild). Valid values: 54, 56, 72, 74
-   help, h   Shows a list of commands or help for one command
+   init, i     Initialize configuration and install mkcert
+   certs, c    Generate and install the certificates
+   hosts       Generate a new hosts profile and add it to your system /etc/host
+   start, s    Bring up the docker containers
+   exec, e     Start docker container shell
+   test, t     Test your configuration.
+   php, p      Change php version (requires "start" to rebuild). Valid values: 54, 56, 72, 74
+   refresh     Pull changes from git and images from Docker
+   selfupdate  Update docdev binary
+   version, v  Output current version.
+   help, h     Shows a list of commands or help for one command
 
 GLOBAL OPTIONS:
    --dry-run, -d  Dry run (default: false)
