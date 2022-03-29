@@ -1,4 +1,7 @@
-# Getting Started
+# Docker Dev Environment
+
+
+![](assets/20220329_083730_docdev.gif)
 
 Source files for Docker images, docdev command, and release strategy: https://github.ark.org/brandon-kiefer/docker-dev-src
 
