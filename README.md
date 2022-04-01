@@ -5,7 +5,7 @@
 
 Source files for Docker images, docdev command, and release strategy: https://github.com/phpdocdev/docdev-cli
 
-Download the latest release: https://github.com/phpdocdev/docdev-cli/releases
+Download the latest release: https://github.com/phpdocdev/docdev/releases
 
 ## Prerequisites
 
