@@ -1,6 +1,5 @@
 # Docker Dev Environment
 
-
 ![](assets/20220329_083730_docdev.gif)
 
 Source files for Docker images, docdev command, and release strategy: https://github.com/phpdocdev/docdev-cli
@@ -75,25 +74,25 @@ OPTIONS:
 
 ### Create SSL certificate and CA
 
-`./docdev certs`
+`docdev certs`
 
 ### Create host file
 
 > Dry run by appending `-d`
 
-`./docdev hosts`
+`docdev hosts`
 
 ### Start the containers and install certificates
 
-`./docdev start`
+`docdev start`
 
 ### Shell into the php container
 
-`vdocdev exec`
+`docdev exec`
 
 ### Change PHP version and start the containers
 
-`./docdev php -s 74`
+`docdev php -s 74`
 
 # Usage
 
@@ -107,18 +106,16 @@ Run `./docdev init` with the appropriate options:
 
 In your `.env` file, modify the value of `DOCUMENTROOT` to the directory containing your repositories. The folder names will represent the hostname to access the specific folder.
 
-## Routing
+## Routing & DNS
 
-### Automatic
+You have a variety of options to setup DNS. Ultimately it makes no difference which method you choose.
 
-Run `./docdev hosts`
-
-### Manually
-
-In your `/etc/hosts` file, add `{myproject.loc}     127.0.0.1`
-
-> `myproject` is the folder/project name.
-> You may also want to install this to manage your host records in Mac system preferences: https://github.com/specialunderwear/Hosts.prefpane
+- **Option 1**: Configure hosts by modifying /etc/hosts (`docdev hosts`)
+  - Adding/removing projects will require you to run the command to refresh the entries
+- **Options 2**: Use BIND as your primary DNS server (for all DNS queries)
+  - Set your primary DNS server to `127.0.0.1`
+- **Option 3**: [Setup dnsmasq](docs/DNS.md)
+- **Option 4**: Add the openvpn container to your configuration and utilize the connection to serve DNS. See: https://github.com/phpdocdev/dns-vpn
 
 ## Project Configuration
 
@@ -129,3 +126,29 @@ Apache is configured to serve from the `public` folder of each project. If you'r
 You will access your projects via `https://myproject.loc`
 
 > If you add any new projects, simply run `./docdev certs && ./docdev start` to refresh the pathings.
+
+## Xdebug
+
+### VSCode
+
+`settings.json`
+
+```json
+ "launch": {
+    "version": "0.2.0",
+    "configurations": [
+      {
+        "name": "docdev",
+        "type": "php",
+        "request": "launch",
+        "hostname": "localhost",
+        "log": true,
+        "port": 9000,
+        "externalConsole": false,
+        "pathMappings": {
+          "/var/www/html/${workspaceFolderBasename}": "${workspaceFolder}"
+        },
+      }
+    ]
+  },
+```

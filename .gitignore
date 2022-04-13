@@ -3,7 +3,6 @@
 .idea
 npm-debug.log
 .env
-cert/*
 
 # Custom Container
 opt/custom/*
@@ -13,7 +12,3 @@ mysql/data/*
 
 # PHP
 custom_crontab
-
-# Apache
-cert
-.vscode

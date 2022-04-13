@@ -1,0 +1,11 @@
+services:
+  apache:
+    volumes:
+  bind:
+    volumes:
+  mailhog:
+    volumes:
+  php-fpm:
+    volumes:
+      - ./php/src/conf/php:/web/php
+      - ./php/src/conf/aes_payment.txt:/etc/aes_payment.txt
