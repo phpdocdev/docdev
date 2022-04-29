@@ -84,6 +84,7 @@ services:
       - DNS_A=${TLD_SUFFIX:-*.loc}=${TLD_HOST:-apache},*.host=${DOCKER_HOST_IP},mysql=${MYSQL_HOST:-127.0.0.1},redis=${REDIS_HOST:-127.0.0.1},php=php,bind=bind,apache=apache,mailhog=mailhog,${EXTRA_HOSTS}
       - DNSSEC_VALIDATE=${BIND_DNSSEC_VALIDATE:-no}
       - DOCKER_LOGS=${BIND_LOG_DNS_QUERIES-1}
+      - DNS_FORWARDER=${DNS_FORWARDERS}
       - ALLOW_RECURSION=any
     dns:
       - 127.0.0.1
