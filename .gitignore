@@ -2,6 +2,7 @@
 .DS_Store
 .idea
 npm-debug.log
+.vscode
 .env
 
 # Custom Container
@@ -12,3 +13,8 @@ mysql/data/*
 
 # PHP
 custom_crontab
+
+# VPN
+*.swp
+vpn/config/*
+*.ovpn

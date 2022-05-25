@@ -1,4 +1,4 @@
-version: '3.9'
+version: "3.9"
 
 networks:
   lde-network:
@@ -36,7 +36,7 @@ services:
       lde-network:
         ipv4_address: 192.168.103.100
     dns:
-      - 192.168.103.106
+      - ${BIND_IP}
 
   # PHP ---------------------------------------------------
   php-fpm:
@@ -56,14 +56,16 @@ services:
     restart: ${DOCKER_RESTART}
     volumes:
       - ${DOCUMENTROOT}:/var/www/html:delegated
+      - ~/.composer/pcomposer:/var/www/.composer/pcomposer:default
       - ./data/.zsh_history:/home/dev/.zsh_history:delegated
+      - ./data/php.ini:/usr/local/etc/php/conf.d/zzb-custom.ini:delegated
     env_file:
       - .env
     networks:
       lde-network:
     user: ${CUSTOM_UID}:${CUSTOM_GID}
-    dns: 
-      - 192.168.103.106
+    dns:
+      - ${BIND_IP}
 
   # BinDNS ---------------------------------------------------
   bind:
@@ -90,12 +92,13 @@ services:
       - 127.0.0.1
     networks:
       lde-network:
-        ipv4_address: 192.168.103.106
+        ipv4_address: ${BIND_IP}
 
   # MailHog ---------------------------------------------------
   mailhog:
     container_name: mailhog
     hostname: mailhog
+    restart: ${DOCKER_RESTART}
     image: ghcr.io/phpdocdev/mailhog:latest
     extends:
       file: ${COMPOSE_OVERRIDE_FILE}

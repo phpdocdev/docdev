@@ -1,0 +1,18 @@
+version: "3"
+
+services:
+  vpn:
+    image: ghcr.io/phpdocdev/vpn:latest
+    volumes:
+      - ./vpn/helpers:/local
+      - ./vpn/config:/etc/openvpn
+      - ./data/vpn:/host:delegated
+    networks:
+      - lde-network
+    cap_add:
+      - NET_ADMIN
+    ports:
+      - "1194:1194/udp"
+      - "13194:13194"
+    environment:
+      dest: docdev.ovpn
