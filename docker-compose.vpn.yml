@@ -2,6 +2,7 @@ version: "3"
 
 services:
   vpn:
+    container_name: vpn
     image: ghcr.io/phpdocdev/vpn:latest
     volumes:
       - ./vpn/helpers:/local

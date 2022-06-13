@@ -13,6 +13,7 @@ networks:
           gateway: 192.168.103.1
 volumes:
   cert:
+  mongodb:
 
 services:
   # Apache ---------------------------------------------------
@@ -50,10 +51,12 @@ services:
       - "9000:9000"
       - "3000:3000"
       - "3001:3001"
+      - "2849:2849"
     extra_hosts:
       - "mysql:${DOCKER_HOST_IP}"
       - "redis:${DOCKER_HOST_IP}"
     restart: ${DOCKER_RESTART}
+    tmpfs: /var/cache
     volumes:
       - ${DOCUMENTROOT}:/var/www/html:delegated
       - ~/.composer/pcomposer:/var/www/.composer/pcomposer:default
@@ -108,3 +111,20 @@ services:
     networks:
       lde-network:
         ipv4_address: 192.168.103.108
+
+  mongo:
+    container_name: mongo
+    image: mongo:latest 
+    # (case sensitive) engine: mmapv1, rocksdb, wiredTiger, inMemory
+    # command: --storageEngine=wiredTiger
+    # restart: always
+    environment:
+      - MONGO_INITDB_DATABASE=xhprof
+    volumes:
+      - ./mongo.init.d:/docker-entrypoint-initdb.d
+      - mongodb:/data/db
+    ports:
+      - "27017:27017"
+    networks:
+      lde-network:
+        ipv4_address: 192.168.103.116

@@ -7,5 +7,5 @@ services:
     volumes:
   php-fpm:
     volumes:
-      - ./php/src/conf/php:/web/php
-      - ./php/src/conf/aes_payment.txt:/etc/aes_payment.txt
+      - ./data/php/conf/php:/web/php
+      - ./data/php/conf/aes_payment.txt:/etc/aes_payment.txt
