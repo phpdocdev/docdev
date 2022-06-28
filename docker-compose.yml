@@ -1,21 +1,7 @@
 version: "3.9"
 
-networks:
-  lde-network:
-    driver: bridge
-    driver_opts:
-      com.docker.network.enable_ipv6: "false"
-      dns: ${DNS}
-    ipam:
-      driver: default
-      config:
-        - subnet: 192.168.103.0/24
-          gateway: 192.168.103.1
-volumes:
-  cert:
-  mongodb:
-
 services:
+
   # Apache ---------------------------------------------------
   apache:
     container_name: apache
@@ -26,8 +12,8 @@ services:
       file: ${COMPOSE_OVERRIDE_FILE}
       service: apache
     ports:
-      - "80:80"
-      - "443:443"
+      - "${HTTP_PORT:-80}:80"
+      - "${HTTP_SSL_PORT:-443}:443"
     volumes:
       - ${DOCUMENTROOT}:/var/www/html:delegated
       - ./data/cert:/etc/ssl/certs
@@ -35,9 +21,8 @@ services:
       - .env
     networks:
       lde-network:
-        ipv4_address: 192.168.103.100
     dns:
-      - ${BIND_IP}
+      - ${BIND_IP:-192.168.103.100}
 
   # PHP ---------------------------------------------------
   php-fpm:
@@ -51,10 +36,7 @@ services:
       - "9000:9000"
       - "3000:3000"
       - "3001:3001"
-      - "2849:2849"
-    extra_hosts:
-      - "mysql:${DOCKER_HOST_IP}"
-      - "redis:${DOCKER_HOST_IP}"
+      - "${MONIT_PORT:-2849}:2849"
     restart: ${DOCKER_RESTART}
     tmpfs: /var/cache
     volumes:
@@ -66,9 +48,9 @@ services:
       - .env
     networks:
       lde-network:
-    user: ${CUSTOM_UID}:${CUSTOM_GID}
+    user: ${CUSTOM_UID:-1000}:${CUSTOM_GID:-1000}
     dns:
-      - ${BIND_IP}
+      - ${BIND_IP:-192.168.103.100}
 
   # BinDNS ---------------------------------------------------
   bind:
@@ -78,15 +60,15 @@ services:
     extends:
       file: ${COMPOSE_OVERRIDE_FILE}
       service: bind
-    restart: always
+    restart: ${DOCKER_RESTART}
     ports:
       - "${HOST_PORT_BIND:-53}:53/tcp"
       - "${HOST_PORT_BIND:-53}:53/udp"
     extra_hosts:
-      - "host.docker.internal:${DOCKER_HOST_IP}"
+      - "host.docker.internal:${DOCKER_HOST_IP:-host-gateway}"
     environment:
-      - DEBUG_ENTRYPOINT=${DEBUG_COMPOSE_ENTRYPOINT}
-      - DNS_A=${TLD_SUFFIX:-*.loc}=${TLD_HOST:-apache},*.host=${DOCKER_HOST_IP},mysql=${MYSQL_HOST:-127.0.0.1},redis=${REDIS_HOST:-127.0.0.1},php=php,bind=bind,apache=apache,mailhog=mailhog,${EXTRA_HOSTS}
+      - DEBUG_ENTRYPOINT=${DEBUG_ENTRYPOINT}
+      - DNS_A=${TLD_SUFFIX:-*.loc}=${TLD_HOST:-apache},*.host=host.docker.internal,mysql=${MYSQL_HOST:-host.docker.internal},redis=${REDIS_HOST:-host.docker.internal},${EXTRA_HOSTS}
       - DNSSEC_VALIDATE=${BIND_DNSSEC_VALIDATE:-no}
       - DOCKER_LOGS=${BIND_LOG_DNS_QUERIES-1}
       - DNS_FORWARDER=${DNS_FORWARDERS}
@@ -95,7 +77,7 @@ services:
       - 127.0.0.1
     networks:
       lde-network:
-        ipv4_address: ${BIND_IP}
+        ipv4_address: ${BIND_IP:-192.168.103.100}
 
   # MailHog ---------------------------------------------------
   mailhog:
@@ -107,24 +89,19 @@ services:
       file: ${COMPOSE_OVERRIDE_FILE}
       service: mailhog
     ports:
-      - "${HOST_PORT_MAILHOG:-8025}:8025"
+      - "${MAILHOG_PORT:-8025}:8025"
     networks:
       lde-network:
-        ipv4_address: 192.168.103.108
 
-  mongo:
-    container_name: mongo
-    image: mongo:latest 
-    # (case sensitive) engine: mmapv1, rocksdb, wiredTiger, inMemory
-    # command: --storageEngine=wiredTiger
-    # restart: always
-    environment:
-      - MONGO_INITDB_DATABASE=xhprof
-    volumes:
-      - ./mongo.init.d:/docker-entrypoint-initdb.d
-      - mongodb:/data/db
-    ports:
-      - "27017:27017"
-    networks:
-      lde-network:
-        ipv4_address: 192.168.103.116
+networks:
+  lde-network:
+    driver: bridge
+    driver_opts:
+      com.docker.network.enable_ipv6: "false"
+      dns: ${DNS}
+      dns_search: bind
+    ipam:
+      driver: default
+      config:
+        - subnet: 192.168.103.0/24
+          gateway: 192.168.103.1

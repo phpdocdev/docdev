@@ -5,15 +5,17 @@ services:
     container_name: vpn
     image: ghcr.io/phpdocdev/vpn:latest
     volumes:
-      - ./vpn/helpers:/local
-      - ./vpn/config:/etc/openvpn
+      - ./data/vpn/conf:/etc/openvpn
       - ./data/vpn:/host:delegated
     networks:
       - lde-network
     cap_add:
       - NET_ADMIN
+    depends_on:
+      - "bind"
     ports:
       - "1194:1194/udp"
       - "13194:13194"
     environment:
-      dest: docdev.ovpn
+      DEST: docdev.ovpn
+      DEBUG_ENTRYPOINT: 2

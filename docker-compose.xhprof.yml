@@ -1,0 +1,33 @@
+version: "3"
+
+volumes:
+  mongodb:
+
+services:
+  mongo:
+    container_name: mongo
+    image: mongo:latest 
+    environment:
+      - MONGO_INITDB_DATABASE=xhprof
+    volumes:
+      - ./mongo.init.d:/docker-entrypoint-initdb.d
+      - mongodb:/data/db
+    ports:
+      - "${MONGO_PORT:-27017}:27017"
+    networks:
+      lde-network:
+  xhgui:
+    container_name: xhprof
+    image: xhgui/xhgui:latest
+    hostname: xhprof
+    restart: always
+    volumes:
+      - ./xhprof/xhgui:/var/www/xhgui/config
+      - ./xhprof/nginx.conf:/etc/nginx/conf.d/default.conf:ro
+    environment:
+      - XHGUI_MONGO_HOSTNAME=mongo
+      - XHGUI_MONGO_DATABASE=xhprof
+    ports:
+      - "${XHPROF_PORT:-8142}:80"
+    networks:
+      lde-network:
