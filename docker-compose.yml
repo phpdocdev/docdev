@@ -42,6 +42,7 @@ services:
     volumes:
       - ${DOCUMENTROOT}:/var/www/html:delegated
       - ~/.composer/pcomposer:/var/www/.composer/pcomposer:default
+      - ./data/cert:/etc/ssl/cert:delegated
       - ./data/.zsh_history:/home/dev/.zsh_history:delegated
       - ./data/php.ini:/usr/local/etc/php/conf.d/zzb-custom.ini:delegated
     env_file:
